@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+}
+
+@for (var i = 1; i < 4; i++)
+{
+    <div class="row">
+        @for (var j = 1; j < 4; j++)
+        {
+            <div class="col-md-4 portfolio-item">
+                @{
+
+            var imagePath = "/Images/PhotoGallery/image_" + i + "_" + j + ".jpg";
+                }
+                <a class="example-image-link" href=@imagePath data-lightbox="example-set" data-title="Click the right half of the image to move forward.">
+                    <img src=@imagePath />
+                </a>
+                @if (i == 1 && j == 1)
+                {
+                    <h4>
+                        <span style="color: green">Martial arts </span>
+                    </h4>
+                    <p>Okinawan martial arts refers to the martial arts, such as karate, tegumi and Okinawan kobudō.</p>
+                }
+                else if (i == 1 && j == 2)
+                {
+               
+                    <h4>
+                        <span style="color: green">Enter the dragon </span>
+                    </h4>
+                    <p>Enter the Dragon is a 1973 Hong Kong-American martial arts film directed by Robert Clouse, starring Bruce Lee.</p>
+                }
+                else if (i == 1 && j == 3)
+                {
+                    <h4>
+                        <span style="color: green">Bruce Lee</span>
+                    </h4>
+                    <p>Lee Jun-fan, known professionally as Bruce Lee. he founder of the martial art Jeet Kune Do ; Web Sites:  Bruce Lee Foundation</p>
+                }
+                else if (i == 2 && j == 1)
+                {
+                   
+                    <h4>
+                        <span style="color: green">Chinese martial arts</span>
+                    </h4>
+                    <p>Kung fu and wushu are loanwords from Cantonese and Mandarin respectively that,are used to refer to Chinese martial arts.</p>
+                }
+                else if (i == 2 && j == 2)
+                {
+                    <h4>
+                        <span style="color: green">Kung fu bear</span>
+                    </h4>
+                    <p>In general, stronger, larger fighters tend to make use of the bear form, which utilizes the turning of the waist. </p>
+                }
+                else if (i == 2 && j == 3)
+                {
+                   
+                    <h4>
+                        <span style="color: green">The karate kid</span>
+                    </h4>
+                    <p>The Karate Kid is a 2010 Chinese-American action drama film directed by Harald Zwart. </p>
+                }
+
+                else if (i == 3 && j == 1)
+                {
+                   
+                    <h4>
+                        <span style="color: green">Martial art uniforms</span>
+                    </h4>
+                    <p>Martial arts uniforms are produced to the highest standards to ensure that you can feel comfortable and move easily.</p>
+                }
+                else if (i == 3 && j == 2)
+                {
+                   
+                    <h4>
+                        <span style="color: green">Tetsuhiko Asai</span>
+                    </h4>
+                    <p>Tetsuhiko Asai (浅井 哲彦 Asai Tetsuhiko?, June 7, 1935 – August 15, 2006) was a prominent Japanese master of Shotokan karate. </p>
+                }
+                else if (i == 3 && j == 3)
+                {
+                    
+                    
+                     <h4>
+                        <span style="color: green">Bruce Lee</span>
+                    </h4>
+                    <p>Lee Jun-fan, known professionally as Bruce Lee. he founder of the martial art Jeet Kune Do ; Web Sites:  Bruce Lee Foundation</p>
+                }
+                else
+                {
+                    <h3>
+                        <a href="#">Project Name</a>
+                    </h3>
+                    <p>Lee Jun-fan (Chinese: 李振藩; November 27, 1940 – July 20, 1973), known professionally as Bruce Lee, was a Hong Kong .</p>
+                }
+
+
+            </div>
+        }
+    </div>
+}

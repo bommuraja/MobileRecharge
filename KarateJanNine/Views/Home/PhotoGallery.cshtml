@@ -1,0 +1,110 @@
+﻿
+
+<script src="~/Scripts/jquery.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/lightbox-plus-jquery.js"></script>
+
+<link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Layout.css" rel="stylesheet" />
+<link href="~/Content/3-col-portfolio.css" rel="stylesheet" />
+<link href="~/Content/lightbox.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    function chagngeGalleryPictures(id) {
+        alert(id);
+    }
+</script>
+
+
+<div class="container box">
+
+    <!-- Page Header -->
+    @*<div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Page Heading
+                    <small>Secondary Text</small>
+            </h1>
+        </div>
+    </div>*@
+    <!-- /.row -->
+    @Html.Partial("~/Views/Shared/_PhotoGallery.cshtml");
+    <!-- Projects Row -->
+   @* <div class="row">
+
+
+     
+
+       
+
+
+
+    </div>*@
+    <!-- /.row -->
+
+
+    <!-- Projects Row -->
+    @*<div class="row">
+
+
+
+        
+
+
+
+
+    </div>*@
+    <!-- /.row -->
+
+
+    <!-- Projects Row -->
+    @*<div class="row">
+
+
+    
+
+
+        
+
+
+        
+
+    </div>*@
+    <!-- /.row -->
+
+    <!-- Pagination -->
+    <div class="row text-center">
+        <div class="col-lg-12">
+            <ul class="pagination">
+                <li>
+                    <a href="#">&laquo;</a>
+                </li>
+                <li class="active">
+                    <a href="#" id="1" onclick="chagngeGalleryPictures(this.id)">1</a>
+                </li>
+                <li>
+                    <a href="#" id="2" onclick="chagngeGalleryPictures(this.id)">2</a>
+                </li>
+                <li>
+                    <a href="#" id="3" onclick="chagngeGalleryPictures(this.id)">3</a>
+                </li>
+                <li>
+                    <a href="#" id="4" onclick="chagngeGalleryPictures(this.id)">4</a>
+                </li>
+                <li>
+                    <a href="#" id="5" onclick="chagngeGalleryPictures(this.id)">5</a>
+                </li>
+                <li>
+                    <a href="#">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <hr>
+</div>
+
+

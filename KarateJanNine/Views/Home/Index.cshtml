@@ -1,0 +1,745 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: aqua;
+            margin: 0%;
+        }
+
+        header {
+            /*width: 100%;
+            height: 10%;
+            background-color: lightgray;*/
+        }
+
+        section {
+            height: 98%;
+            width: 100%;
+        }
+
+        aside {
+            /*width: 19.5%;
+            margin: 0.5% 0% 0.5% 0.5%;
+            height: 97%;
+            float: left;
+            background-color: lightgray;*/
+        }
+
+        article {
+            width: 98%;
+            margin: 1%;
+            height: 97%;
+            float: left;
+            background-color: lightgray;
+        }
+
+        footer {
+            /*height: 10%;
+            background-color: lightgray;*/
+        }
+
+        input {
+            padding: 10px;
+            width: 98%;
+            font-size: 17px;
+            font-family: Raleway;
+            border: 1px solid #aaaaaa;
+        }
+
+        .fontRecharge {
+            font-size: 17px;
+            font-family: Raleway;
+        }
+
+        #BalanceDisplay {
+            padding: 10px;
+            width: 98%;
+            font-size: 17px;
+            font-family: Raleway;
+            text-align: right;
+            border: none;
+        }
+
+        #ProfitDisplay {
+            padding: 10px;
+            width: 98%;
+            font-size: 17px;
+            font-family: Raleway;
+            text-align: right;
+            border: none;
+        }
+
+        select {
+            padding: 10px;
+            width: 98%;
+            font-size: 17px;
+            font-family: Raleway;
+            border: 1px solid #aaaaaa;
+        }
+
+
+
+        .tab {
+            display: none;
+            width: 98%;
+            margin: 2%;
+            position: relative;
+            top: 30%;
+        }
+
+        .nxtsubmitbtn {
+            float: right;
+            margin: 2%;
+            position: relative;
+            top: 35%;
+        }
+
+        .statusmessage {
+            padding: 10px;
+            width: 98%;
+            font-size: 17px;
+            font-family: Raleway;
+            border: 1px solid #aaaaaa;
+        }
+
+        input.invalid {
+            background-color: #ffdddd;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 17px;
+            font-family: Raleway;
+            cursor: pointer;
+        }
+
+            button:hover {
+                opacity: 0.8;
+            }
+
+        #prevBtn {
+            background-color: #bbbbbb;
+        }
+
+        /* Make circles that indicate the steps of the form: */
+        .step {
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbbbbb;
+            border: none;
+            border-radius: 50%;
+            display: inline-block;
+            opacity: 0.5;
+        }
+
+            .step.active {
+                opacity: 1;
+            }
+
+            /* Mark the steps that are finished and valid: */
+            .step.finish {
+                background-color: #4CAF50;
+            }
+
+        .modal {
+            position: absolute;
+            float: left;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .busyModal {
+            position: fixed;
+            z-index: 999;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            background-color: Black;
+            filter: alpha(opacity=60);
+            opacity: 0.6;
+            -moz-opacity: 0.8;
+        }
+
+        .busyCenter {
+            z-index: 1000;
+            margin: 300px auto;
+            padding: 10px;
+            width: 130px;
+            background-color: White;
+            border-radius: 10px;
+            filter: alpha(opacity=100);
+            opacity: 1;
+            -moz-opacity: 1;
+        }
+
+            .busyCenter img {
+                height: 128px;
+                width: 128px;
+            }
+    </style>
+
+
+</head>
+<body>
+    <header></header>
+    <nav></nav>
+    <section>
+        <aside></aside>
+        <article>
+            <div class="modal" style="display: none">
+                <div class="center">
+                    <img alt="" src="loader.gif" />
+                </div>
+            </div>
+
+
+            <div class="tab">
+
+                <div>
+                    <input type="hidden" value="0" id="customerID" />
+                    <p><input placeholder="User name..." oninput="this.className = ''" name="uname" id="userName"></p>
+                    <p><input placeholder="Password..." oninput="this.className = ''" name="pword" type="password" id="password"></p>
+
+                </div>
+            </div>
+            <div class="tab">
+                <input type="hidden" id="hdnProfitBalance" name="custId">
+                <input type="hidden" id="hdnWalletBalance" name="custId">
+                <input type="hidden" id="hdnProfitWalletTotal" value="0.00" name="custId">
+
+                <a href="javascript:moveProfitToBalanceFunction()"><label id="ProfitDisplay">Profit Total : 0.00 </label></a>
+                <label id="BalanceDisplay">Wallet Balance : 0.00 </label>
+                <p><input placeholder="Mobile number..." oninput="this.className = ''" name="mobilenumber" id="mobileNumber"></p>
+                <p>
+                    <select id="operatorList">
+                        <option value="0" selected>Select Operator</option>
+                        <option value="1">Airtel</option>
+                        <option value="112">Jio</option>
+                        <option value="2">Vodaphone</option>
+                        <option value="3">Idea</option>
+                        <option value="8">BSNL</option>
+                        <option value="5">Tata Docomo</option>
+                    </select>
+                </p>
+                <p><input placeholder="Recharge amount..." oninput="this.className = ''" name="Rechargeamount" id="rechargeAmount"></p>
+            </div>
+            <div class="tab">
+                <!--<span class="statusmessage">
+                    details
+                </span>-->
+                <div class="alert alert-success statusmessage">
+                    <strong>Success!</strong> This alert box could indicate a successful or positive action.
+                </div>
+                <!--<div class="alert alert-info statusmessage">
+                    <strong>Info!</strong> This alert box could indicate a neutral informative change or action.
+                </div>
+                <div class="alert alert-warning statusmessage">
+                    <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
+                </div>
+                <div class="alert alert-danger statusmessage">
+                    <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
+                </div>-->
+
+            </div>
+            <!--<div class="tab">
+                <p><input placeholder="Username..." oninput="this.className = ''" name="uname"></p>
+                <p><input placeholder="Password..." oninput="this.className = ''" name="pword" type="password"></p>
+            </div>-->
+
+            <div class="nxtsubmitbtn">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">LogOut</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+            </div>
+
+            <!--<div style="text-align:center;margin-top:40px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+            </div>-->
+        </article>
+    </section>
+    <footer></footer>
+    <div class="busyModal" style="display: none">
+        <div class="busyCenter">
+            <img alt="" src="~/Content/Images/loader.gif" />
+        </div>
+    </div>
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content panel-danger">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <lable class="modal-title fontRecharge"><h4>Warning !</h4></lable>
+                </div>
+                <div class="modal-body panel-body">
+                    <lable id="warningText" class="fontRecharge">Please enter valid values</lable>
+                </div>
+                <div class="modal-footer panel-footer">
+                    <button type="button" class="btn btn-primary fontRecharge" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="informationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content panel-info">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <lable class="modal-title fontRecharge"><h4>Information !</h4></lable>
+                </div>
+                <div class="modal-body panel-body">
+                    <lable id="informationText" class="fontRecharge">Please try again !</lable>
+                </div>
+                <div class="modal-footer panel-footer">
+                    <button type="button" class="btn btn-primary fontRecharge" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content panel-success">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <lable class="modal-title fontRecharge"><h4>Success !</h4></lable>
+                </div>
+                <div class="modal-body panel-body">
+                    <lable id="successText" class="fontRecharge">Recharge done successfully</lable>
+                </div>
+                <div class="modal-footer panel-footer">
+                    <button type="button" class="btn btn-primary fontRecharge" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="profitToWalletModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content panel-info">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <lable class="modal-title fontRecharge"><h4>Move Profit to Wallet</h4></lable>
+                </div>
+                <div class="modal-body panel-body">
+                    <lable id="profitToWalletInformationText" class="fontRecharge">Move 'Profit(0.00)' to 'Wallet(0.00)' </lable>
+                </div>
+                <div class="modal-footer panel-footer">
+                    <button type="button" class="btn btn-primary fontRecharge" onclick="javascript:moveProfitToBalanceOkay()" data-dismiss="modal">Okay</button>
+                    <button type="button" class="btn btn-primary fontRecharge" onclick="javascript:moveProfitToBalanceCancel()" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script type="text/javascript">
+
+
+
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the crurrent tab
+
+        function showTab(n) {
+
+            // This function will display the specified tab of the form...
+            var x = document.getElementsByClassName("tab");
+            x[n].style.display = "block";
+            //... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Home";
+            } else if (n == (x.length - 2)) {
+                document.getElementById("nextBtn").innerHTML = "Recharge";
+            } else {
+                document.getElementById("nextBtn").innerHTML = "SignIn";
+            }
+            //... and run a function that will display the correct step indicator:
+
+            //fixStepIndicator(n)
+            if (n == 0) {
+                resetAllControls();
+            }
+            //alert(n);
+        }
+        var previousTab;
+        function nextPrev(n) {
+            // This function will figure out which tab to display
+            var x = document.getElementsByClassName("tab");
+            // Exit the function if any field in the current tab is invalid:
+            if (n == 1 && !validateForm()) {
+                return false;
+            } else if (n == -1) {
+                x[1].style.display = "none";
+                showTab(0);
+            }
+
+
+            // Hide the current tab:
+            previousTab = currentTab;
+            // Increase or decrease the current tab by 1:
+            currentTab = currentTab + n;
+            // if you have reached the end of the form...
+            if (currentTab >= x.length) {
+                currentTab = 0;
+                // ... the form gets submitted:
+                //document.getElementById("regForm").submit();
+                //return false;
+            }
+            if (currentTab == 1) {
+                //WalletBalanceFunction();
+                var userName = $('#userName').val();
+                var password = $('#password').val();
+                //var response = LoginFunction(userName, password);
+                //
+                var objDatasForLogin = new DatasForLogin();
+                objDatasForLogin.userName = userName;
+                objDatasForLogin.password = password;
+                $.ajax({
+
+                    type: "POST",
+                    url: "/Home/LoginFunction",
+                    data: JSON.stringify(objDatasForLogin),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $(".busyModal").show();
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (response) {
+
+                        $(".busyModal").hide();
+                        $('#customerID').val(response.CustomerID);
+                        if (response.CustomerID > 0) {
+                            x[previousTab].style.display = "none";
+                            showTab(currentTab);
+                            $("#BalanceDisplay").empty();
+                            $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                            $("#hdnWalletBalance").val(response.WalletBalance);
+
+                            $("#ProfitDisplay").empty();
+                            $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                            $("#hdnProfitBalance").val(response.ProfitBalance);
+
+
+                        } else if (response.CustomerID == 0) {
+                            currentTab = previousTab;
+                            $('#warningModal').modal('show');
+                            $(".modal-body #warningText").empty();
+                            $(".modal-body #warningText").append('Please enter valid value.');
+                        } else {
+                            currentTab = previousTab;
+                            $('#informationModal').modal('show');
+                            $(".modal-body #informationText").empty();
+                            $(".modal-body #informationText").append('Please try again');
+                        }
+                    },
+                    failure: function (response) {
+                        return false;
+                    },
+                    error: function (response) {
+                        return false;
+                    }
+
+                });
+
+
+            }
+            if (currentTab == 2) {
+                var mobileNumber = $('#mobileNumber').val();
+                var netWork = $('#operatorList').val();
+                var amount = $('#rechargeAmount').val();
+
+                //WalletBalanceFunction();
+                RechargeFunction(mobileNumber, netWork, amount);
+                //x[previousTab].style.display = "none";
+                currentTab = previousTab;
+                //showTab(currentTab);
+
+            }
+            // Otherwise, display the correct tab:
+        }
+
+        function validateForm() {
+            debugger;
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            x = document.getElementsByClassName("tab");
+            y = x[currentTab].getElementsByTagName("input");
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false
+                    valid = false;
+                }
+            }
+            z = x[currentTab].getElementsByTagName("select");
+            if (z.length > 0) {
+                var selectedValue = z[0].options[z[0].selectedIndex].value;
+                if (selectedValue == 0) {
+                    //z.className = " invalid";
+                    $('#operatorList').css("background-color", "#ffdddd");
+                    valid = false;
+                }
+            }
+
+
+            // If the valid status is true, mark the step as finished and valid:
+            //if (valid) {
+            //    document.getElementsByClassName("step")[currentTab].className += " finish";
+            //}
+            return valid; // return the valid status
+        }
+        $('#operatorList').on("click", function () {
+            $('#operatorList').css("background-color", "");
+            //Your code here
+        });
+
+        function fixStepIndicator(n) {
+            var i, x = document.getElementsByClassName("step");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" active", "");
+            }
+            x[n].className += " active";
+        }
+
+
+
+
+        function RechargeFunction(mobileNumber, netWork, amount) {
+
+            var objDatasForRecharge = new DatasForRecharge();
+            objDatasForRecharge.id = '95317608';
+            objDatasForRecharge.token = 'ZbfFt6JWuRsdhySrCG80eoVI4UpcYNQP9AlwqXKz';
+            objDatasForRecharge.RechargeTo = mobileNumber;
+            objDatasForRecharge.ProviderId = netWork;
+            objDatasForRecharge.Amount = amount;
+            objDatasForRecharge.customerID = $('#customerID').val();
+
+            $.ajax({
+
+                type: "POST",
+                url: "/Home/RechargeFunction",
+                data: JSON.stringify(objDatasForRecharge),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $(".busyModal").show();
+                },
+                success: function (response) {
+                    resetAllControls();
+                    $(".busyModal").hide();
+                    if (response != null) {
+                        $("#BalanceDisplay").empty();
+                        $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                        $("#hdnWalletBalance").val(response.WalletBalance);
+
+                        $("#ProfitDisplay").empty();
+                        $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                        $("#hdnProfitBalance").val(response.ProfitBalance);
+
+                        $('#successModal').modal('show');
+                        $(".modal-body #successText").empty();
+                        $(".modal-body #successText").append('Recharge done successfully');
+                    } else {
+                        $('#warningModal').modal('show');
+                        $(".modal-body #warningText").empty();
+                        $(".modal-body #warningText").append('Recharge failed try again');
+                    }
+                },
+                failure: function (response) {
+                    $('#warningModal').modal('show');
+                    $(".modal-body #warningText").empty();
+                    $(".modal-body #warningText").append('Recharge failed try again');
+                },
+                error: function (response) {
+                    $('#warningModal').modal('show');
+                    $(".modal-body #warningText").empty();
+                    $(".modal-body #warningText").append('Recharge failed try again');
+                }
+
+            });
+
+
+
+
+
+
+        }
+        function WalletBalanceFunction() {
+
+            var objDatasForWalletBalance = new DatasForWalletBalance();
+            objDatasForWalletBalance.id = '95317608';
+            objDatasForWalletBalance.token = 'ZbfFt6JWuRsdhySrCG80eoVI4UpcYNQP9AlwqXKz';
+
+
+            $.ajax({
+
+                type: "POST",
+                url: "/Home/WalletBalanceFunction",
+                data: JSON.stringify(objDatasForWalletBalance),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+                        $("#BalanceDisplay").empty();
+                        $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                        $("#hdnWalletBalance").val(response.WalletBalance);
+
+                        $("#ProfitDisplay").empty();
+                        $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                        $("#hdnProfitBalance").val(response.ProfitBalance);
+                        //alert(response);
+                    } else {
+                        //alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    //alert(response.responseText);
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+
+            });
+
+
+
+
+
+
+        }
+        function DatasForRecharge() {
+            this.id = '';
+            this.token = '';
+            this.RechargeTo = '';
+            this.ProviderId = '';
+            this.Amount = '';
+            this.customerID = '';
+        }
+        function DatasForLogin() {
+            this.userName = '';
+            this.password = '';
+        }
+        function DatasForWalletBalance() {
+            this.id = '';
+            this.token = '';
+        }
+
+        function TransferProfitToWallet() {
+            this.CustomerID = '';
+            this.ProfitBalance = '';
+            this.WalletBalance = '';
+        }
+        function resetAllControls() {
+            $('#userName').val('');
+            $('#password').val('');
+            $('#mobileNumber').val('');
+            $('#rechargeAmount').val('');
+
+            $('#operatorList option').prop('selected', function () {
+                return this.defaultSelected;
+            });
+        }
+
+        $('#warningModal').on('hide.bs.modal', function () {
+            resetAllControls();
+        });
+
+        function moveProfitToBalanceFunction() {
+            $('#profitToWalletModal').modal('show');
+            var total = parseFloat($('#hdnProfitBalance').val()) + parseFloat($('#hdnWalletBalance').val());
+            $('#hdnProfitWalletTotal').val(total.toFixed(2));
+            $('#profitToWalletInformationText').text($('#hdnProfitBalance').val() + " + " + $('#hdnWalletBalance').val() + " = " + total.toFixed(2) + " Total");
+        }
+
+        function moveProfitToBalanceOkay() {
+
+            var objTransferProfitToWallet = new TransferProfitToWallet();
+            objTransferProfitToWallet.CustomerID = $('#customerID').val();
+            objTransferProfitToWallet.ProfitBalance = $('#hdnProfitBalance').val();
+            objTransferProfitToWallet.WalletBalance = $('#hdnWalletBalance').val();
+
+
+            $.ajax({
+
+                type: "POST",
+                url: "/Home/MoveProfitToBalanceFunction",
+                data: JSON.stringify(objTransferProfitToWallet),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $(".busyModal").show();
+                },
+                success: function (response) {
+                    resetAllControls();
+                    $(".busyModal").hide();
+
+                    $("#BalanceDisplay").empty();
+                    $("#BalanceDisplay").append("Wallet Balance : " + $('#hdnProfitWalletTotal').val());
+                    $("#hdnWalletBalance").val($('#hdnProfitWalletTotal').val());
+
+
+                    $("#ProfitDisplay").empty();
+                    $("#ProfitDisplay").append("Profit : 0.00 ");
+                    $("#hdnProfitBalance").val("0.00");
+
+
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+
+            });
+
+        }
+
+        function moveProfitToBalanceCancel() {
+            alert('cancel');
+        }
+    </script>
+
+
+</body>
+
+</html>

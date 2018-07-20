@@ -1,0 +1,160 @@
+﻿@model IEnumerable<KarateJanNine.ViewModels.PhotoDetailsVM>
+
+
+@{
+    ViewBag.Title = "PhotoGalleryGridSettings";
+}
+
+@{
+    Layout = null;
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+
+<script src="~/Scripts/jquery.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://kendo.cdn.telerik.com/<kendo ui version>/styles/kendo.common-bootstrap.min.css" />
+<link rel="stylesheet" href="http://kendo.cdn.telerik.com/<kendo ui version>/styles/kendo.bootstrap.min.css" />
+
+<link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.3.1028/styles/kendo.common.min.css" />
+
+<link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.3.1028/styles/kendo.default.min.css" />
+
+<link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+
+
+<script src="js/kendo.all.min.js"></script>
+<script src="http://kendo.cdn.telerik.com/2016.3.1028/js/kendo.all.min.js"></script>
+ <script id="template" type="text/x-kendo-template">
+    <a class="k-button" href="\#" onclick="return toolbar_click()">Command</a>
+     function toolbar_click() {
+          alert("Toolbar command is clicked!");
+         
+      }
+  </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+       
+ 
+      
+
+        var PhotoGalleryURL = "/Home";
+        dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: PhotoGalleryURL + "/GetPhotoGalleryGridSettings",
+                    dataType: "json"
+                },
+                update: {
+                    url: PhotoGalleryURL + "/Products/Update",
+                    dataType: "json"
+                },
+                destroy: {
+                    url: PhotoGalleryURL + "/Products/Destroy",
+                    dataType: "json"
+                },
+                create: {
+                    url: PhotoGalleryURL + "/Products/Create",
+                    dataType: "json"
+                },
+                parameterMap: function (options, operation) {
+                    if (operation !== "read" && options.models) {
+                        return { models: kendo.stringify(options.models) };
+                    }
+                }
+            },
+            batch: true,
+            pageSize: 20,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        UniqueName: { type: "string" },
+                        ModuleName: { type: "string" },
+                        Name: { type: "string" },
+                        Title: { type: "string" }
+                    }
+                }
+            }
+        });
+
+
+        $("#photoGalleryGridDiv").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            height: 600,
+            //toolbar: ["create", "Add"],
+            toolbar: [{
+                name: 'create' 
+            },{ 
+                name: 'Add'
+            },{
+                name: 'cancel'
+            },{
+                template:'<a class="k-button " id="CreateNewRecord" href="\\#"><span class="k-icon k-add"></span>Create New Record</a>'
+            }, {
+                template: '<a class="k-button " id="CreateNewRecord2" href="\\#"><span class="k-icon k-add"></span>Create New Record2</a>'
+            }],
+            columns: [
+                { field: "UniqueName", title: "Unique Name", width: "120px" },
+                { field: "ModuleName", title: "Module Name", width: "120px" },
+                { field: "Name", title: "Name", width: "120px" },
+                { field: "Title", title: "Title", width: "120px" },
+                { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+            editable: "popup"
+        });
+
+
+        $('#CreateNewRecord').click(function () {
+            alert('1');
+            var addPhotoPopUp=$('#photoGalleryCreateWindowDiv').kendoWindow({
+                content: {
+                    url: "/PhotoGallery/GetAddPhotoGalleryView"
+                }
+            }).data("kendoWindow");
+            addPhotoPopUp.center().open();
+            alert('2');
+
+        });
+
+        $('#CreateNewRecord2').click(function () {
+            
+        });
+
+
+    });
+</script>
+
+
+
+
+<div id="example">
+    <div id="photoGalleryGridDiv"></div>
+    <div id="photoGalleryCreateWindowDiv"></div>
+</div>
+
+<style type="text/css">
+    .customer-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
+    .customer-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+</style>
+
