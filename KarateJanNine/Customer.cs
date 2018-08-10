@@ -17,6 +17,8 @@ namespace KarateJanNine
         public Customer()
         {
             this.CashTransactions = new HashSet<CashTransaction>();
+            this.CommissionTransactions = new HashSet<CommissionTransaction>();
+            this.Recharges = new HashSet<Recharge>();
             this.WalletTransactions = new HashSet<WalletTransaction>();
         }
     
@@ -33,6 +35,8 @@ namespace KarateJanNine
         public string LastModifiedBy { get; set; }
     
         public virtual ICollection<CashTransaction> CashTransactions { get; set; }
+        public virtual ICollection<CommissionTransaction> CommissionTransactions { get; set; }
+        public virtual ICollection<Recharge> Recharges { get; set; }
         public virtual ICollection<WalletTransaction> WalletTransactions { get; set; }
     }
 }

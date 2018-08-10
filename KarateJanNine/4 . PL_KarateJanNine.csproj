@@ -171,6 +171,9 @@
     <Compile Include="Commission.cs">
       <DependentUpon>RechargeDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CommissionTransaction.cs">
+      <DependentUpon>RechargeDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Customer.cs">

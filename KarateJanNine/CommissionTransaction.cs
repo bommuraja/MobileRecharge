@@ -12,17 +12,17 @@ namespace KarateJanNine
     using System;
     using System.Collections.Generic;
     
-    public partial class CashTransaction
+    public partial class CommissionTransaction
     {
-        public int CashTransactionID { get; set; }
+        public int CommissionTransactionID { get; set; }
         public int CustomerID { get; set; }
         public Nullable<bool> IsCredit { get; set; }
-        public string CashTransactionDate { get; set; }
-        public string CashTransactionReferenceDescription { get; set; }
-        public string CashTransactionReferenceID { get; set; }
-        public string CashTransactionAmount { get; set; }
-        public string CashTransactionDescription { get; set; }
-        public string CashBalance { get; set; }
+        public string CommissionTransactionDate { get; set; }
+        public string CommissionTransactionReferenceDescription { get; set; }
+        public string CommissionTransactionReferenceID { get; set; }
+        public string CommissionTransactionAmount { get; set; }
+        public string CommissionTransactionDescription { get; set; }
+        public string CommissionBalance { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }
     

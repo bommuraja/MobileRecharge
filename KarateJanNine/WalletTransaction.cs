@@ -15,20 +15,16 @@ namespace KarateJanNine
     public partial class WalletTransaction
     {
         public int WalletTransactionID { get; set; }
-        public int TransactionTypeID { get; set; }
-        public Nullable<int> CustomerID { get; set; }
-        public string Date { get; set; }
-        public string Reference { get; set; }
-        public string Remark { get; set; }
-        public Nullable<bool> IsRecharge { get; set; }
+        public int CustomerID { get; set; }
+        public Nullable<bool> IsCredit { get; set; }
+        public string WalletTransactionDate { get; set; }
+        public string WalletTransactionReferenceDescription { get; set; }
+        public string WalletTransactionReferenceID { get; set; }
         public string WalletTransactionAmount { get; set; }
+        public string WalletTransactionDescription { get; set; }
         public string WalletBalance { get; set; }
-        public string RechargeAmount { get; set; }
-        public string ComissionAmount { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }
-        public string ComissionTotal { get; set; }
-        public Nullable<bool> IsProfitTransfer { get; set; }
     
         public virtual Customer Customer { get; set; }
     }

@@ -235,13 +235,13 @@
                 <p><input placeholder="Mobile number..." oninput="this.className = ''" name="mobilenumber" id="mobileNumber"></p>
                 <p>
                     <select id="operatorList">
-                        <option value="0" selected>Select Operator</option>
-                        <option value="1">Airtel</option>
-                        <option value="112">Jio</option>
-                        <option value="2">Vodaphone</option>
-                        <option value="3">Idea</option>
-                        <option value="8">BSNL</option>
-                        <option value="5">Tata Docomo</option>
+                        <option value="0" text="" selected>Select Operator</option>
+                        <option value="1" text="Airtel">Airtel</option>
+                        <option value="93" text="Jio">Jio</option>
+                        <option value="10" text="Vodaphone">Vodaphone</option>
+                        <option value="3" text="Idea">Idea</option>
+                        <option value="4" text="BSNL">BSNL</option>
+                        <option value="7" text="TataDocomo">Tata Docomo</option>
                     </select>
                 </p>
                 <p><input placeholder="Recharge amount..." oninput="this.className = ''" name="Rechargeamount" id="rechargeAmount"></p>
@@ -407,95 +407,27 @@
             }
 
 
-            // Hide the current tab:
             previousTab = currentTab;
-            // Increase or decrease the current tab by 1:
             currentTab = currentTab + n;
-            // if you have reached the end of the form...
             if (currentTab >= x.length) {
-                currentTab = 0;
-                // ... the form gets submitted:
-                //document.getElementById("regForm").submit();
-                //return false;
+                currentTab = 0;             
             }
             if (currentTab == 1) {
-                //WalletBalanceFunction();
                 var userName = $('#userName').val();
-                var password = $('#password').val();
-                //var response = LoginFunction(userName, password);
-                //
-                var objDatasForLogin = new DatasForLogin();
-                objDatasForLogin.userName = userName;
-                objDatasForLogin.password = password;
-                $.ajax({
-
-                    type: "POST",
-                    url: "/Home/LoginFunction",
-                    data: JSON.stringify(objDatasForLogin),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    beforeSend: function () {
-                        $(".busyModal").show();
-                    },
-                    complete: function () {
-
-                    },
-                    success: function (response) {
-
-                        $(".busyModal").hide();
-                        $('#customerID').val(response.CustomerID);
-                        if (response.CustomerID > 0) {
-                            x[previousTab].style.display = "none";
-                            showTab(currentTab);
-                            $("#BalanceDisplay").empty();
-                            $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
-                            $("#hdnWalletBalance").val(response.WalletBalance);
-
-                            $("#ProfitDisplay").empty();
-                            $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
-                            $("#hdnProfitBalance").val(response.ProfitBalance);
-
-
-                        } else if (response.CustomerID == 0) {
-                            currentTab = previousTab;
-                            $('#warningModal').modal('show');
-                            $(".modal-body #warningText").empty();
-                            $(".modal-body #warningText").append('Please enter valid value.');
-                        } else {
-                            currentTab = previousTab;
-                            $('#informationModal').modal('show');
-                            $(".modal-body #informationText").empty();
-                            $(".modal-body #informationText").append('Please try again');
-                        }
-                    },
-                    failure: function (response) {
-                        return false;
-                    },
-                    error: function (response) {
-                        return false;
-                    }
-
-                });
-
-
+                var passWord = $('#password').val();
+                LoginFunction(userName, passWord);
             }
             if (currentTab == 2) {
                 var mobileNumber = $('#mobileNumber').val();
-                var netWork = $('#operatorList').val();
+                var netWorkidvalue = $('#operatorList').val();
+                var netWorktextvalue = $('#operatorList option:selected').text();
                 var amount = $('#rechargeAmount').val();
-
-                //WalletBalanceFunction();
-                RechargeFunction(mobileNumber, netWork, amount);
-                //x[previousTab].style.display = "none";
+                RechargeFunction(mobileNumber, netWorkidvalue, netWorktextvalue, amount);
                 currentTab = previousTab;
-                //showTab(currentTab);
-
             }
-            // Otherwise, display the correct tab:
         }
 
         function validateForm() {
-            debugger;
             // This function deals with validation of the form fields
             var x, y, i, valid = true;
             x = document.getElementsByClassName("tab");
@@ -543,59 +475,113 @@
 
 
 
-        function RechargeFunction(mobileNumber, netWork, amount) {
+        function RechargeFunction(mobileNumber, netWorkidvalue, netWorktextvalue, amount) {
 
-            var objDatasForRecharge = new DatasForRecharge();
-            objDatasForRecharge.id = '95317608';
-            objDatasForRecharge.token = 'ZbfFt6JWuRsdhySrCG80eoVI4UpcYNQP9AlwqXKz';
-            objDatasForRecharge.RechargeTo = mobileNumber;
-            objDatasForRecharge.ProviderId = netWork;
-            objDatasForRecharge.Amount = amount;
-            objDatasForRecharge.customerID = $('#customerID').val();
+            var walletBalance = parseInt($("#hdnWalletBalance").val());
+            var rechargeAmount = parseInt(amount);
+            var guid = createGuid().replace(/[^a-zA-Z ]/g, "").slice(0, 10);
+            var format = "json";
+            var token = "eaPePjRoLNzQTsvjkwVM4hKUkIRyH1";
 
-            $.ajax({
+            
+            if (walletBalance > rechargeAmount) {
+                $.ajax({
+                    url: "http://api.rechapi.com/recharge.php?format=" + format + "&token=" + token + "&mobile=" + mobileNumber + "&amount=" + rechargeAmount + "&opid=" + netWorkidvalue + "&urid=" + guid,
+                    type: "POST",
+                    crossDomain: true,
+                    dataType: "json",
+                    beforeSend: function () {
+                        $(".busyModal").show();
+                    },
+                    success: function (response) {
+                        $(".busyModal").hide();
+                        // 1. response.data.amount = 10
+                        // 2. response.data.bal = "210.8625"
+                        // 3. response.data.creditUsed = "9.9025"
+                        // 4. response.data.error_code = "201"
+                        // 5. response.data.mobile = "8754137742"
+                        // 6. response.data.operatorId = 0
+                        // 7. response.data.orderId = 80339798
+                        // 8.  response.data.resText = "Recharge Pending"
+                        // 9. response.data.service = "Airtel"
+                        // 10. response.data.status = "PENDING"
+                        var objDatasForRecharge = new DatasForRecharge();
+                        objDatasForRecharge.CustomerID = $('#customerID').val();
+                        objDatasForRecharge.MobileNumber = mobileNumber;
+                        objDatasForRecharge.NetworkName = netWorktextvalue;
+                        objDatasForRecharge.NetworkID = netWorkidvalue;
+                        objDatasForRecharge.RechargeAmount = response.data.amount.toString();
+                        objDatasForRecharge.DateAndTime = GetTodayDateWithTime();
+                        objDatasForRecharge.RechargeStatus = response.data.status;
+                        objDatasForRecharge.RechargeStatusDescription = response.data.resText;
+                        objDatasForRecharge.RechargeReferenceIDFromAPI = response.data.orderId.toString();
+                        objDatasForRecharge.RechargeReferenceIDFromNetwork = (response.data.transactionId != null) ? response.data.transactionId:'';
+                        objDatasForRecharge.CreatedDate = GetTodayDateWithTime();
+                        objDatasForRecharge.CreatedBy = $('#userName').val();
+                        objDatasForRecharge.LastModifiedDate = GetTodayDateWithTime();
+                        objDatasForRecharge.LastModifiedBy = $('#userName').val();
 
-                type: "POST",
-                url: "/Home/RechargeFunction",
-                data: JSON.stringify(objDatasForRecharge),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                beforeSend: function () {
-                    $(".busyModal").show();
-                },
-                success: function (response) {
-                    resetAllControls();
-                    $(".busyModal").hide();
-                    if (response != null) {
-                        $("#BalanceDisplay").empty();
-                        $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
-                        $("#hdnWalletBalance").val(response.WalletBalance);
+                       
 
-                        $("#ProfitDisplay").empty();
-                        $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
-                        $("#hdnProfitBalance").val(response.ProfitBalance);
+                        $.ajax({
 
-                        $('#successModal').modal('show');
-                        $(".modal-body #successText").empty();
-                        $(".modal-body #successText").append('Recharge done successfully');
-                    } else {
-                        $('#warningModal').modal('show');
-                        $(".modal-body #warningText").empty();
-                        $(".modal-body #warningText").append('Recharge failed try again');
+                            type: "POST",
+                            url: "/Home/RechargeFunction",
+                            data: JSON.stringify(objDatasForRecharge) ,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            beforeSend: function () {
+                                $(".busyModal").show();
+                            },
+                            success: function (response) {
+                                resetAllControls();
+                                $(".busyModal").hide();
+                                if (response != null) {
+                                    $("#BalanceDisplay").empty();
+                                    $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                                    $("#hdnWalletBalance").val(response.WalletBalance);
+
+                                    $("#ProfitDisplay").empty();
+                                    $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                                    $("#hdnProfitBalance").val(response.ProfitBalance);
+
+                                    $('#successModal').modal('show');
+                                    $(".modal-body #successText").empty();
+                                    $(".modal-body #successText").append(response.StatusDescription);
+                                } else {
+                                    $('#warningModal').modal('show');
+                                    $(".modal-body #warningText").empty();
+                                    $(".modal-body #warningText").append('Recharge failed try again');
+                                }
+                            },
+                            failure: function (response) {
+                                $('#warningModal').modal('show');
+                                $(".modal-body #warningText").empty();
+                                $(".modal-body #warningText").append('Recharge failed try again');
+                            },
+                            error: function (response) {
+                                $('#warningModal').modal('show');
+                                $(".modal-body #warningText").empty();
+                                $(".modal-body #warningText").append('Recharge failed try again');
+                            }
+
+                        });
+
+                    },
+                    error: function (xhr, status) {
+                        alert("error");
                     }
-                },
-                failure: function (response) {
-                    $('#warningModal').modal('show');
-                    $(".modal-body #warningText").empty();
-                    $(".modal-body #warningText").append('Recharge failed try again');
-                },
-                error: function (response) {
-                    $('#warningModal').modal('show');
-                    $(".modal-body #warningText").empty();
-                    $(".modal-body #warningText").append('Recharge failed try again');
-                }
+                });
+            } else {
+                alert('false');
+            }
 
-            });
+
+
+
+        
+
+           
 
 
 
@@ -647,12 +633,20 @@
 
         }
         function DatasForRecharge() {
-            this.id = '';
-            this.token = '';
-            this.RechargeTo = '';
-            this.ProviderId = '';
-            this.Amount = '';
-            this.customerID = '';
+            this.CustomerID = '';
+            this.MobileNumber = '';
+            this.NetworkName = '';
+            this.NetworkID = '';
+            this.RechargeAmount = '';
+            this.DateAndTime = '';
+            this.RechargeStatus = '';
+            this.RechargeStatusDescription = '';
+            this.RechargeReferenceIDFromAPI = '';
+            this.RechargeReferenceIDFromNetwork = '';
+            this.CreatedDate = '';
+            this.CreatedBy = '';
+            this.LastModifiedDate = '';
+            this.LastModifiedBy = '';
         }
         function DatasForLogin() {
             this.userName = '';
@@ -667,6 +661,8 @@
             this.CustomerID = '';
             this.ProfitBalance = '';
             this.WalletBalance = '';
+            this.DateAndTime = '';
+            this.CreatedBy = '';
         }
         function resetAllControls() {
             $('#userName').val('');
@@ -696,6 +692,9 @@
             objTransferProfitToWallet.CustomerID = $('#customerID').val();
             objTransferProfitToWallet.ProfitBalance = $('#hdnProfitBalance').val();
             objTransferProfitToWallet.WalletBalance = $('#hdnWalletBalance').val();
+            objTransferProfitToWallet.DateAndTime = GetTodayDateWithTime();
+            objTransferProfitToWallet.CreatedBy = $('#userName').val();
+
 
 
             $.ajax({
@@ -713,13 +712,16 @@
                     $(".busyModal").hide();
 
                     $("#BalanceDisplay").empty();
-                    $("#BalanceDisplay").append("Wallet Balance : " + $('#hdnProfitWalletTotal').val());
-                    $("#hdnWalletBalance").val($('#hdnProfitWalletTotal').val());
-
+                    $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                    $("#hdnWalletBalance").val(response.WalletBalance);
 
                     $("#ProfitDisplay").empty();
-                    $("#ProfitDisplay").append("Profit : 0.00 ");
-                    $("#hdnProfitBalance").val("0.00");
+                    $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                    $("#hdnProfitBalance").val(response.ProfitBalance);
+
+                    $('#successModal').modal('show');
+                    $(".modal-body #successText").empty();
+                    $(".modal-body #successText").append(response.StatusDescription);
 
 
                 },
@@ -735,7 +737,91 @@
         }
 
         function moveProfitToBalanceCancel() {
-            alert('cancel');
+        }
+
+        function createGuid() {
+            function S4() {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            }
+            return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+        }
+
+        // 1. Login function
+        function LoginFunction(UserName, Password) {
+
+            var objDatasForLogin = new DatasForLogin();
+            objDatasForLogin.userName = UserName;
+            objDatasForLogin.password = Password;
+
+            $.ajax({
+
+                type: "POST",
+                url: "/Home/LoginFunction",
+                data: JSON.stringify(objDatasForLogin),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $(".busyModal").show();
+                },
+                complete: function () {
+
+                },
+                success: function (response) {
+                    $(".busyModal").hide();
+                    $('#customerID').val(response.CustomerID);
+                    if (response.CustomerID > 0) {
+                        var x = document.getElementsByClassName("tab");
+                        x[previousTab].style.display = "none";
+                        showTab(currentTab);
+                        $("#BalanceDisplay").empty();
+                        $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                        $("#hdnWalletBalance").val(response.WalletBalance);
+
+                        $("#ProfitDisplay").empty();
+                        $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                        $("#hdnProfitBalance").val(response.ProfitBalance);
+
+
+                    } else if (response.CustomerID == 0) {
+                        currentTab = previousTab;
+                        $('#warningModal').modal('show');
+                        $(".modal-body #warningText").empty();
+                        $(".modal-body #warningText").append('Please enter valid value.');
+                    } else {
+                        currentTab = previousTab;
+                        $('#informationModal').modal('show');
+                        $(".modal-body #informationText").empty();
+                        $(".modal-body #informationText").append('Please try again');
+                    }
+                },
+                failure: function (response) {
+                    return false;
+                },
+                error: function (response) {
+                    return false;
+                }
+
+            });
+        }
+
+        // Add-on
+        function GetTodayDateWithTime() {
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+            ];
+
+            var date = new Date()
+
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+
+            var todayDateWithTime = monthNames[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear() + " " + strTime;
+            return todayDateWithTime;
         }
     </script>
 

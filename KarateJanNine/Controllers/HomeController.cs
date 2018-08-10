@@ -78,12 +78,21 @@ namespace KarateJanNine.Controllers
 
         public class DatasForRecharge
         {
-            public string id { get; set; }
-            public string token { get; set; }
-            public string RechargeTo { get; set; }
-            public string ProviderId { get; set; }
-            public string Amount { get; set; }
-            public string customerID { get; set; }
+            public int CustomerID { get; set; }
+            public string MobileNumber { get; set; }
+            public string NetworkName { get; set; }
+            public string NetworkID { get; set; }
+            public string RechargeAmount { get; set; }
+            public string DateAndTime { get; set; }
+            public string RechargeStatus { get; set; }
+            public string RechargeStatusDescription { get; set; }
+            public string RechargeReferenceIDFromAPI { get; set; }
+            public string RechargeReferenceIDFromNetwork { get; set; }
+            public string CreatedDate { get; set; }
+            public string CreatedBy { get; set; }
+            public string LastModifiedDate { get; set; }
+            public string LastModifiedBy { get; set; }
+
 
         }
         public class DatasForLogin
@@ -93,103 +102,120 @@ namespace KarateJanNine.Controllers
 
 
         }
+
+        public class ReachApiRecharge
+        {
+            public string format { get; set; }
+            public string token { get; set; }
+            public string mobile { get; set; }
+            public string amount { get; set; }
+            public string opid { get; set; }
+            public string urid { get; set; }
+        }
+
+        public ActionResult GetCustomerWalletBalance(string customerID)
+        {
+            var CustomerID = Convert.ToInt32(customerID);
+            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+            var WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+            return Json(WalletBalanceAmount, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult RechargeFunction(DatasForRecharge objDatasForRecharge)
         {
-            WalletBalanceForDisplay objWalletBalanceForDisplay = new WalletBalanceForDisplay();
-
+            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+            LoginResponse objLoginResponse = new LoginResponse();
+            int NetworkID = Convert.ToInt32(objDatasForRecharge.NetworkID);
+          
             try
             {
+                // 1. Recharge Table Entry
+                Recharge newRecharge = new Recharge();
+                newRecharge.CustomerID = objDatasForRecharge.CustomerID;
+                newRecharge.MobileNumber = objDatasForRecharge.MobileNumber;
+                newRecharge.NetworkName = objDatasForRecharge.NetworkName;
+                newRecharge.RechargeAmount = objDatasForRecharge.RechargeAmount;
+                newRecharge.DateAndTime = objDatasForRecharge.DateAndTime;
+                newRecharge.RechargeStatus = objDatasForRecharge.RechargeStatus;
+                newRecharge.RechargeStatusDescription = objDatasForRecharge.RechargeStatusDescription;
+                newRecharge.RechargeReferenceIDFromAPI = objDatasForRecharge.RechargeReferenceIDFromAPI;
+                newRecharge.RechargeReferenceIDFromNetwork = objDatasForRecharge.RechargeReferenceIDFromNetwork;
+                newRecharge.CreatedDate = objDatasForRecharge.CreatedDate;
+                newRecharge.CreatedBy = objDatasForRecharge.CreatedBy;
+                newRecharge.LastModifiedDate = objDatasForRecharge.LastModifiedDate;
+                newRecharge.LastModifiedBy = objDatasForRecharge.LastModifiedBy;
+                objtodorechargeEntities.Recharges.Add(newRecharge);
+                objtodorechargeEntities.SaveChanges();
 
-                ServicePointManager.SecurityProtocol = (SecurityProtocolType)48 | (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
-
-
-
-                string URI = "https://allbills.in/api/recharge";
-
-                var json = new JavaScriptSerializer().Serialize(objDatasForRecharge);
-
-                using (WebClient wc = new WebClient())
+                if (objDatasForRecharge.RechargeStatus.ToLower() != "failed")
                 {
-                    var CustomerID = Convert.ToInt32(objDatasForRecharge.customerID);
-                    var ProviderID = Convert.ToInt32(objDatasForRecharge.ProviderId);
-                    todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+                    // 2. Wallet Transaction
+                    var LastWalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
+
+                    WalletTransaction objWalletTransaction = new WalletTransaction();
+                    objWalletTransaction.CustomerID = objDatasForRecharge.CustomerID;
+                    objWalletTransaction.IsCredit = false;
+                    objWalletTransaction.WalletTransactionDate = objDatasForRecharge.DateAndTime;
+                    objWalletTransaction.WalletTransactionReferenceDescription = "Recharge";
+                    objWalletTransaction.WalletTransactionReferenceID = newRecharge.RechargeID.ToString();
+                    objWalletTransaction.WalletTransactionAmount = objDatasForRecharge.RechargeAmount;
+                    objWalletTransaction.WalletTransactionDescription = "Debit transaction for mobile recharge amount";
+                    objWalletTransaction.WalletBalance = (Convert.ToDecimal(LastWalletBalanceAmount) - Convert.ToDecimal(objDatasForRecharge.RechargeAmount)).ToString();
+                    objWalletTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
+                    objWalletTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
+                    objtodorechargeEntities.WalletTransactions.Add(objWalletTransaction);
+                    objtodorechargeEntities.SaveChanges();
+
+                    // 3. Commission Tranction
+                    var LastCommissionBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                    var ThisRechargeCommisionPercentage = objtodorechargeEntities.Commissions.OrderByDescending(n => n.CommissionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID && m.ProviderID == NetworkID).FirstOrDefault().CommissionPercentage;
+                    var ThisRechargeCommissionAmount = (Convert.ToDecimal(objDatasForRecharge.RechargeAmount) * Convert.ToDecimal(ThisRechargeCommisionPercentage)) / 100;
 
 
-                    wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    var WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
-                    var ProfitBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().ComissionTotal;
-                    objWalletBalanceForDisplay.WalletBalance = "0.00";
-                    objWalletBalanceForDisplay.ProfitBalance = "0.00";
-                    if (Convert.ToDouble(WalletBalanceAmount) > Convert.ToDouble(objDatasForRecharge.Amount))
-                    {
-                        string HtmlResult = wc.UploadString(URI, json);
-                        dynamic data = JObject.Parse(HtmlResult);
-                        // 1 . Recharge Table Entry
-                        Recharge newRecharge = new Recharge();
-                        newRecharge.Message = data.Message;
-                        newRecharge.isError = data.isError;
-                        newRecharge.TimeStamp = data.TimeStamp;
-                        newRecharge.Partnerid = data.Partnerid;
-                        newRecharge.RechargeTo = data.RechargeTo;
-                        newRecharge.OperatorName = data.OperatorName;
-                        newRecharge.Amount = data.Amount;
-                        newRecharge.ProviderId = data.ProviderId;
-                        newRecharge.Profit = data.Profit;
-                        newRecharge.OperatorReference = data.OperatorReference;
-                        newRecharge.Status = data.Status;
-                        newRecharge.Statement = data.Statement;
-                        newRecharge.PaymentId = data.PaymentId;
-                       
-                        objtodorechargeEntities.Recharges.Add(newRecharge);
-                        objtodorechargeEntities.SaveChanges();
-
-                        // 2. WalletTransaction Table Entry
-                        WalletTransaction objWalletTransaction = new WalletTransaction();
-                        objWalletTransaction.IsRecharge = true;
-                        objWalletTransaction.TransactionTypeID = newRecharge.RechargeID;
-                        objWalletTransaction.CustomerID = CustomerID;
-                        objWalletTransaction.Date = DateTime.Now.ToShortDateString();
-                        objWalletTransaction.Reference = "test";
-                        objWalletTransaction.Remark = newRecharge.Status;
-                        objWalletTransaction.RechargeAmount = objDatasForRecharge.Amount;
-                        var CommissionPercentage = objtodorechargeEntities.Commissions.Where(m => m.CustomerID == CustomerID && m.ProviderID == ProviderID).SingleOrDefault().CommissionPercentage;
-                        objWalletTransaction.ComissionAmount = ((Convert.ToDecimal(CommissionPercentage) * Convert.ToDecimal(objDatasForRecharge.Amount)) / 100).ToString();
-                        objWalletTransaction.WalletTransactionAmount = (Convert.ToDecimal(objWalletTransaction.RechargeAmount)).ToString();
-                        if (newRecharge.Status != "failure")
-                        {
-                            objWalletTransaction.WalletBalance = (Convert.ToDecimal(WalletBalanceAmount) - Convert.ToDecimal(objWalletTransaction.WalletTransactionAmount)).ToString();
-                            objWalletBalanceForDisplay.WalletBalance = String.Format("{0:0.00}", (Convert.ToDecimal(WalletBalanceAmount) - Convert.ToDecimal(objWalletTransaction.WalletTransactionAmount)));
-
-                            objWalletTransaction.ComissionTotal = (Convert.ToDecimal(ProfitBalanceAmount) + Convert.ToDecimal(objWalletTransaction.ComissionAmount)).ToString();
-                            objWalletBalanceForDisplay.ProfitBalance = String.Format("{0:0.00}", (Convert.ToDecimal(ProfitBalanceAmount) + Convert.ToDecimal(objWalletTransaction.ComissionAmount)));
-
-
-                        }
-                        else
-                        {
-                            objWalletTransaction.WalletBalance = Convert.ToDecimal(WalletBalanceAmount).ToString();
-                            objWalletBalanceForDisplay.WalletBalance = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
-
-                            objWalletTransaction.ComissionTotal = Convert.ToDecimal(ProfitBalanceAmount).ToString();
-                            objWalletBalanceForDisplay.ProfitBalance = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
-
-
-                        }
-                        objtodorechargeEntities.WalletTransactions.Add(objWalletTransaction);
-                        objtodorechargeEntities.SaveChanges();
-                    }
-
-                    return Json(objWalletBalanceForDisplay, JsonRequestBehavior.AllowGet);
+                    CommissionTransaction objCommissionTransaction = new CommissionTransaction();
+                    objCommissionTransaction.CustomerID = objDatasForRecharge.CustomerID;
+                    objCommissionTransaction.IsCredit = true;
+                    objCommissionTransaction.CommissionTransactionDate = objDatasForRecharge.DateAndTime;
+                    objCommissionTransaction.CommissionTransactionReferenceDescription = "WalletTransaction";
+                    objCommissionTransaction.CommissionTransactionID = objWalletTransaction.WalletTransactionID;
+                    objCommissionTransaction.CommissionTransactionAmount = ThisRechargeCommissionAmount.ToString();
+                    objCommissionTransaction.CommissionTransactionDescription = "Credit transaction for mobile recharge commission";
+                    objCommissionTransaction.CommissionBalance = (Convert.ToDecimal(LastCommissionBalanceAmount) + Convert.ToDecimal(ThisRechargeCommissionAmount)).ToString(); ;
+                    objCommissionTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
+                    objCommissionTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
+                    objtodorechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
+                    objtodorechargeEntities.SaveChanges();
 
                 }
+                var WalletBalanceAmount = "0.00";
+                var ProfitBalanceAmount = "0.00";
+
+                WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
+                WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
+
+                ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
+
+                objLoginResponse.CustomerID = objDatasForRecharge.CustomerID.ToString();
+                objLoginResponse.WalletBalance = WalletBalanceAmount;
+                objLoginResponse.ProfitBalance = ProfitBalanceAmount;
+
+                objLoginResponse.StatusDescription = objDatasForRecharge.RechargeStatusDescription;
+
+                return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
+
             }
             catch (Exception ex)
             {
+                var exceptionDetails = ex;
+                objLoginResponse.CustomerID = "-99";
+                return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
 
-                return Json(objWalletBalanceForDisplay, JsonRequestBehavior.AllowGet);
             }
 
-            return View();
+
+
+
+
         }
 
         public class WalletBalanceForDisplay
@@ -246,18 +272,22 @@ namespace KarateJanNine.Controllers
                     WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
                     WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
 
-                    ProfitBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().ComissionTotal;
+                    ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
                     ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
                 }
                 objLoginResponse.CustomerID = CustomerID.ToString();
                 objLoginResponse.WalletBalance = WalletBalanceAmount;
                 objLoginResponse.ProfitBalance = ProfitBalanceAmount;
+                objLoginResponse.StatusDescription = "Logged in successfully";
                 return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 var exceptionDetails = ex;
                 objLoginResponse.CustomerID = "-99";
+                objLoginResponse.WalletBalance = "0";
+                objLoginResponse.ProfitBalance = "0";
+                objLoginResponse.StatusDescription = "Login failed";
                 return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
 
             }
@@ -267,29 +297,62 @@ namespace KarateJanNine.Controllers
 
         public ActionResult MoveProfitToBalanceFunction(TransferProfitToWallet objTransferProfitToWallet)
         {
-            var CustomerID = 0;
-
+            int CustomerID = Convert.ToInt32(objTransferProfitToWallet.CustomerID);
+            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
             try
             {
-                todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
-                CustomerID = Convert.ToInt32(objTransferProfitToWallet.CustomerID);
-                var LastWalletTransaction = objtodorechargeEntities.WalletTransactions.Where(m => m.CustomerID == CustomerID).OrderByDescending(n=>n.WalletTransactionID).FirstOrDefault();
+                // 3. Commission Tranction
+                var LastCommissionBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
 
-                var NewWalletTransaction = new WalletTransaction();
-                NewWalletTransaction.TransactionTypeID = -21;
-                NewWalletTransaction.CustomerID = CustomerID;
-                NewWalletTransaction.Date = DateTime.Today.ToString();
-                NewWalletTransaction.IsRecharge = false;
-                NewWalletTransaction.IsProfitTransfer = true;
-                NewWalletTransaction.WalletTransactionAmount = objTransferProfitToWallet.ProfitBalance;
-                NewWalletTransaction.WalletBalance = (Convert.ToDecimal(objTransferProfitToWallet.ProfitBalance) + Convert.ToDecimal(objTransferProfitToWallet.WalletBalance)).ToString();
-                NewWalletTransaction.RechargeAmount = "0.00";
-                NewWalletTransaction.ComissionAmount = "0.00";
-                NewWalletTransaction.ComissionTotal = "0.00";
-                objtodorechargeEntities.WalletTransactions.Add(NewWalletTransaction);
+
+                CommissionTransaction objCommissionTransaction = new CommissionTransaction();
+                objCommissionTransaction.CustomerID = CustomerID;
+                objCommissionTransaction.IsCredit = false;
+                objCommissionTransaction.CommissionTransactionDate = objTransferProfitToWallet.DateAndTime;
+                objCommissionTransaction.CommissionTransactionReferenceDescription = "CommissionTransaction";
+                objCommissionTransaction.CommissionTransactionID = 0;
+                objCommissionTransaction.CommissionTransactionAmount = LastCommissionBalanceAmount;
+                objCommissionTransaction.CommissionTransactionDescription = "Commission move to wallet";
+                objCommissionTransaction.CommissionBalance = "0" ;
+                objCommissionTransaction.CreatedDate = objTransferProfitToWallet.DateAndTime;
+                objCommissionTransaction.CreatedBy = objTransferProfitToWallet.CreatedBy;
+                objtodorechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
                 objtodorechargeEntities.SaveChanges();
 
-                return Json(objTransferProfitToWallet, JsonRequestBehavior.AllowGet);
+                var LastWalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+
+                WalletTransaction objWalletTransaction = new WalletTransaction();
+                objWalletTransaction.CustomerID = CustomerID;
+                objWalletTransaction.IsCredit = true;
+                objWalletTransaction.WalletTransactionDate = objTransferProfitToWallet.DateAndTime;
+                objWalletTransaction.WalletTransactionReferenceDescription = "CommissionTransaction";
+                objWalletTransaction.WalletTransactionReferenceID = objCommissionTransaction.CommissionTransactionID.ToString();
+                objWalletTransaction.WalletTransactionAmount = LastCommissionBalanceAmount;
+                objWalletTransaction.WalletTransactionDescription = "Credit transaction move commision to wallet";
+                objWalletTransaction.WalletBalance = (Convert.ToDecimal(LastWalletBalanceAmount) + Convert.ToDecimal(LastCommissionBalanceAmount)).ToString();
+                objWalletTransaction.CreatedDate = objTransferProfitToWallet.DateAndTime;
+                objWalletTransaction.CreatedBy = objTransferProfitToWallet.CreatedBy;
+                objtodorechargeEntities.WalletTransactions.Add(objWalletTransaction);
+                objtodorechargeEntities.SaveChanges();
+
+                LoginResponse objLoginResponse = new LoginResponse();
+
+                var WalletBalanceAmount = "0.00";
+                var ProfitBalanceAmount = "0.00";
+
+                WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+                WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
+
+                ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
+                ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
+
+                objLoginResponse.CustomerID = CustomerID.ToString();
+                objLoginResponse.WalletBalance = WalletBalanceAmount;
+                objLoginResponse.ProfitBalance = ProfitBalanceAmount;
+
+                objLoginResponse.StatusDescription = "Commission moved to wallet";
+
+                return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -303,6 +366,8 @@ namespace KarateJanNine.Controllers
             public string CustomerID { get; set; }
             public string WalletBalance { get; set; }
             public string ProfitBalance { get; set; }
+
+            public string StatusDescription { get; set; }
         }
 
         public class DatasForWalletBalance
@@ -335,5 +400,7 @@ namespace KarateJanNine.Controllers
         public string CustomerID { get; set; }
         public string ProfitBalance { get; set; }
         public string WalletBalance { get; set; }
+        public string DateAndTime { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

@@ -11,13 +11,12 @@
           </Key>
           <Property Name="CashTransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerID" Type="int" Nullable="false" />
-          <Property Name="Date" Type="nvarchar" MaxLength="50" />
-          <Property Name="Reference" Type="nvarchar" MaxLength="50" />
-          <Property Name="Remark" Type="nvarchar" MaxLength="50" />
           <Property Name="IsCredit" Type="bit" />
-          <Property Name="IsForWallet" Type="bit" />
-          <Property Name="IsForBalance" Type="bit" />
+          <Property Name="CashTransactionDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="CashTransactionReferenceDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="CashTransactionReferenceID" Type="nvarchar" MaxLength="50" />
           <Property Name="CashTransactionAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="CashTransactionDescription" Type="nvarchar" MaxLength="50" />
           <Property Name="CashBalance" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
@@ -34,6 +33,22 @@
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifiedDate" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifiedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CommissionTransaction">
+          <Key>
+            <PropertyRef Name="CommissionTransactionID" />
+          </Key>
+          <Property Name="CommissionTransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="IsCredit" Type="bit" />
+          <Property Name="CommissionTransactionDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommissionTransactionReferenceDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommissionTransactionReferenceID" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommissionTransactionAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommissionTransactionDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommissionBalance" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -67,19 +82,15 @@
             <PropertyRef Name="RechargeID" />
           </Key>
           <Property Name="RechargeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Message" Type="nvarchar" MaxLength="50" />
-          <Property Name="isError" Type="nvarchar" MaxLength="50" />
-          <Property Name="TimeStamp" Type="nvarchar" MaxLength="50" />
-          <Property Name="Partnerid" Type="nvarchar" MaxLength="50" />
-          <Property Name="RechargeTo" Type="nvarchar" MaxLength="50" />
-          <Property Name="OperatorName" Type="nvarchar" MaxLength="50" />
-          <Property Name="Amount" Type="nvarchar" MaxLength="50" />
-          <Property Name="ProviderId" Type="nvarchar" MaxLength="50" />
-          <Property Name="Profit" Type="nvarchar" MaxLength="50" />
-          <Property Name="OperatorReference" Type="nvarchar" MaxLength="50" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
-          <Property Name="Statement" Type="nvarchar" MaxLength="50" />
-          <Property Name="PaymentId" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="NetworkName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RechargeAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateAndTime" Type="nvarchar" MaxLength="50" />
+          <Property Name="RechargeStatus" Type="nvarchar" MaxLength="50" />
+          <Property Name="RechargeStatusDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="RechargeReferenceIDFromAPI" Type="nvarchar" MaxLength="50" />
+          <Property Name="RechargeReferenceIDFromNetwork" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifiedDate" Type="nvarchar" MaxLength="50" />
@@ -90,18 +101,14 @@
             <PropertyRef Name="WalletTransactionID" />
           </Key>
           <Property Name="WalletTransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TransactionTypeID" Type="int" Nullable="false" />
-          <Property Name="CustomerID" Type="int" />
-          <Property Name="Date" Type="nvarchar" MaxLength="50" />
-          <Property Name="Reference" Type="nvarchar" MaxLength="50" />
-          <Property Name="Remark" Type="nvarchar" MaxLength="50" />
-          <Property Name="IsRecharge" Type="bit" />
-          <Property Name="IsProfitTransfer" Type="bit" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="IsCredit" Type="bit" />
+          <Property Name="WalletTransactionDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="WalletTransactionReferenceDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="WalletTransactionReferenceID" Type="nvarchar" MaxLength="50" />
           <Property Name="WalletTransactionAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="WalletTransactionDescription" Type="nvarchar" MaxLength="50" />
           <Property Name="WalletBalance" Type="nvarchar" MaxLength="50" />
-          <Property Name="RechargeAmount" Type="nvarchar" MaxLength="50" />
-          <Property Name="ComissionAmount" Type="nvarchar" MaxLength="50" />
-          <Property Name="ComissionTotal" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -129,8 +136,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CommissionTransaction_CommissionTransaction">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CommissionTransaction" Type="Self.CommissionTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="CommissionTransaction">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recharge_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="Recharge" Type="Self.Recharge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Recharge">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WalletTransaction_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
           <End Role="WalletTransaction" Type="Self.WalletTransaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customer">
@@ -144,6 +175,7 @@
         <EntityContainer Name="todorechargeModelStoreContainer">
           <EntitySet Name="CashTransaction" EntityType="Self.CashTransaction" Schema="todorecharge" store:Type="Tables" />
           <EntitySet Name="Commission" EntityType="Self.Commission" Schema="todorecharge" store:Type="Tables" />
+          <EntitySet Name="CommissionTransaction" EntityType="Self.CommissionTransaction" Schema="todorecharge" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="todorecharge" store:Type="Tables" />
           <EntitySet Name="Provider" EntityType="Self.Provider" Schema="todorecharge" store:Type="Tables" />
           <EntitySet Name="Recharge" EntityType="Self.Recharge" Schema="todorecharge" store:Type="Tables" />
@@ -156,6 +188,14 @@
             <End Role="Provider" EntitySet="Provider" />
             <End Role="Commission" EntitySet="Commission" />
           </AssociationSet>
+          <AssociationSet Name="FK_CommissionTransaction_CommissionTransaction" Association="Self.FK_CommissionTransaction_CommissionTransaction">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="CommissionTransaction" EntitySet="CommissionTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recharge_Customer" Association="Self.FK_Recharge_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Recharge" EntitySet="Recharge" />
+          </AssociationSet>
           <AssociationSet Name="FK_WalletTransaction_Customer" Association="Self.FK_WalletTransaction_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="WalletTransaction" EntitySet="WalletTransaction" />
@@ -165,23 +205,51 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="todorechargeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="todorechargeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CashTransactions" EntityType="todorechargeModel.CashTransaction" />
+          <EntitySet Name="Commissions" EntityType="todorechargeModel.Commission" />
+          <EntitySet Name="CommissionTransactions" EntityType="todorechargeModel.CommissionTransaction" />
+          <EntitySet Name="Customers" EntityType="todorechargeModel.Customer" />
+          <EntitySet Name="Providers" EntityType="todorechargeModel.Provider" />
+          <EntitySet Name="Recharges" EntityType="todorechargeModel.Recharge" />
+          <EntitySet Name="WalletTransactions" EntityType="todorechargeModel.WalletTransaction" />
+          <AssociationSet Name="FK_CashTransaction_Customer" Association="todorechargeModel.FK_CashTransaction_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CashTransaction" EntitySet="CashTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commission_Customer" Association="todorechargeModel.FK_Commission_Customer">
+            <End Role="Provider" EntitySet="Providers" />
+            <End Role="Commission" EntitySet="Commissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommissionTransaction_CommissionTransaction" Association="todorechargeModel.FK_CommissionTransaction_CommissionTransaction">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CommissionTransaction" EntitySet="CommissionTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recharge_Customer" Association="todorechargeModel.FK_Recharge_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Recharge" EntitySet="Recharges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WalletTransaction_Customer" Association="todorechargeModel.FK_WalletTransaction_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="WalletTransaction" EntitySet="WalletTransactions" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="CashTransaction">
           <Key>
             <PropertyRef Name="CashTransactionID" />
           </Key>
           <Property Name="CashTransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CustomerID" Type="Int32" Nullable="false" />
-          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Reference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Remark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsCredit" Type="Boolean" />
-          <Property Name="IsForWallet" Type="Boolean" />
-          <Property Name="IsForBalance" Type="Boolean" />
+          <Property Name="CashTransactionDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CashTransactionReferenceDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CashTransactionReferenceID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CashTransactionAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CashTransactionDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CashBalance" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_CashTransaction_Customer" FromRole="CashTransaction" ToRole="Customer" />
+          <NavigationProperty Name="Customer" Relationship="todorechargeModel.FK_CashTransaction_Customer" FromRole="CashTransaction" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Commission">
           <Key>
@@ -195,7 +263,24 @@
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Provider" Relationship="Self.FK_Commission_Customer" FromRole="Commission" ToRole="Provider" />
+          <NavigationProperty Name="Provider" Relationship="todorechargeModel.FK_Commission_Customer" FromRole="Commission" ToRole="Provider" />
+        </EntityType>
+        <EntityType Name="CommissionTransaction">
+          <Key>
+            <PropertyRef Name="CommissionTransactionID" />
+          </Key>
+          <Property Name="CommissionTransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="IsCredit" Type="Boolean" />
+          <Property Name="CommissionTransactionDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommissionTransactionReferenceDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommissionTransactionReferenceID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommissionTransactionAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommissionTransactionDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommissionBalance" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="todorechargeModel.FK_CommissionTransaction_CommissionTransaction" FromRole="CommissionTransaction" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -212,8 +297,10 @@
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="CashTransactions" Relationship="Self.FK_CashTransaction_Customer" FromRole="Customer" ToRole="CashTransaction" />
-          <NavigationProperty Name="WalletTransactions" Relationship="Self.FK_WalletTransaction_Customer" FromRole="Customer" ToRole="WalletTransaction" />
+          <NavigationProperty Name="CashTransactions" Relationship="todorechargeModel.FK_CashTransaction_Customer" FromRole="Customer" ToRole="CashTransaction" />
+          <NavigationProperty Name="CommissionTransactions" Relationship="todorechargeModel.FK_CommissionTransaction_CommissionTransaction" FromRole="Customer" ToRole="CommissionTransaction" />
+          <NavigationProperty Name="Recharges" Relationship="todorechargeModel.FK_Recharge_Customer" FromRole="Customer" ToRole="Recharge" />
+          <NavigationProperty Name="WalletTransactions" Relationship="todorechargeModel.FK_WalletTransaction_Customer" FromRole="Customer" ToRole="WalletTransaction" />
         </EntityType>
         <EntityType Name="Provider">
           <Key>
@@ -225,55 +312,48 @@
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Commissions" Relationship="Self.FK_Commission_Customer" FromRole="Provider" ToRole="Commission" />
+          <NavigationProperty Name="Commissions" Relationship="todorechargeModel.FK_Commission_Customer" FromRole="Provider" ToRole="Commission" />
         </EntityType>
         <EntityType Name="Recharge">
           <Key>
             <PropertyRef Name="RechargeID" />
           </Key>
           <Property Name="RechargeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Message" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="isError" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TimeStamp" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Partnerid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeTo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OperatorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Amount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ProviderId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Profit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OperatorReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Statement" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NetworkName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateAndTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeStatusDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeReferenceIDFromAPI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeReferenceIDFromNetwork" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="todorechargeModel.FK_Recharge_Customer" FromRole="Recharge" ToRole="Customer" />
         </EntityType>
         <EntityType Name="WalletTransaction">
           <Key>
             <PropertyRef Name="WalletTransactionID" />
           </Key>
           <Property Name="WalletTransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TransactionTypeID" Type="Int32" Nullable="false" />
-          <Property Name="CustomerID" Type="Int32" />
-          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Reference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Remark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsRecharge" Type="Boolean" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="IsCredit" Type="Boolean" />
+          <Property Name="WalletTransactionDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WalletTransactionReferenceDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WalletTransactionReferenceID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="WalletTransactionAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WalletTransactionDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="WalletBalance" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ComissionAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_WalletTransaction_Customer" FromRole="WalletTransaction" ToRole="Customer" />
-          <Property Name="ComissionTotal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsProfitTransfer" Type="Boolean" />
+          <NavigationProperty Name="Customer" Relationship="todorechargeModel.FK_WalletTransaction_Customer" FromRole="WalletTransaction" ToRole="Customer" />
         </EntityType>
         <Association Name="FK_CashTransaction_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="CashTransaction" Type="Self.CashTransaction" Multiplicity="*" />
+          <End Type="todorechargeModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="todorechargeModel.CashTransaction" Role="CashTransaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customer">
               <PropertyRef Name="CustomerID" />
@@ -284,8 +364,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Commission_Customer">
-          <End Role="Provider" Type="Self.Provider" Multiplicity="1" />
-          <End Role="Commission" Type="Self.Commission" Multiplicity="*" />
+          <End Type="todorechargeModel.Provider" Role="Provider" Multiplicity="1" />
+          <End Type="todorechargeModel.Commission" Role="Commission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Provider">
               <PropertyRef Name="ProviderID" />
@@ -295,9 +375,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CommissionTransaction_CommissionTransaction">
+          <End Type="todorechargeModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="todorechargeModel.CommissionTransaction" Role="CommissionTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="CommissionTransaction">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recharge_Customer">
+          <End Type="todorechargeModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="todorechargeModel.Recharge" Role="Recharge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Recharge">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WalletTransaction_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
-          <End Role="WalletTransaction" Type="Self.WalletTransaction" Multiplicity="*" />
+          <End Type="todorechargeModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="todorechargeModel.WalletTransaction" Role="WalletTransaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customer">
               <PropertyRef Name="CustomerID" />
@@ -307,26 +411,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="todorechargeEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="CashTransactions" EntityType="Self.CashTransaction" />
-          <EntitySet Name="Commissions" EntityType="Self.Commission" />
-          <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="Providers" EntityType="Self.Provider" />
-          <EntitySet Name="Recharges" EntityType="Self.Recharge" />
-          <EntitySet Name="WalletTransactions" EntityType="Self.WalletTransaction" />
-          <AssociationSet Name="FK_CashTransaction_Customer" Association="Self.FK_CashTransaction_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="CashTransaction" EntitySet="CashTransactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Commission_Customer" Association="Self.FK_Commission_Customer">
-            <End Role="Provider" EntitySet="Providers" />
-            <End Role="Commission" EntitySet="Commissions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WalletTransaction_Customer" Association="Self.FK_WalletTransaction_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="WalletTransaction" EntitySet="WalletTransactions" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -336,106 +420,114 @@
           <EntitySetMapping Name="CashTransactions">
             <EntityTypeMapping TypeName="todorechargeModel.CashTransaction">
               <MappingFragment StoreEntitySet="CashTransaction">
-                <ScalarProperty Name="CashTransactionID" ColumnName="CashTransactionID" />
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Reference" ColumnName="Reference" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
-                <ScalarProperty Name="IsForWallet" ColumnName="IsForWallet" />
-                <ScalarProperty Name="IsForBalance" ColumnName="IsForBalance" />
-                <ScalarProperty Name="CashTransactionAmount" ColumnName="CashTransactionAmount" />
-                <ScalarProperty Name="CashBalance" ColumnName="CashBalance" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CashBalance" ColumnName="CashBalance" />
+                <ScalarProperty Name="CashTransactionDescription" ColumnName="CashTransactionDescription" />
+                <ScalarProperty Name="CashTransactionAmount" ColumnName="CashTransactionAmount" />
+                <ScalarProperty Name="CashTransactionReferenceID" ColumnName="CashTransactionReferenceID" />
+                <ScalarProperty Name="CashTransactionReferenceDescription" ColumnName="CashTransactionReferenceDescription" />
+                <ScalarProperty Name="CashTransactionDate" ColumnName="CashTransactionDate" />
+                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CashTransactionID" ColumnName="CashTransactionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Commissions">
             <EntityTypeMapping TypeName="todorechargeModel.Commission">
               <MappingFragment StoreEntitySet="Commission">
-                <ScalarProperty Name="CommissionID" ColumnName="CommissionID" />
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="ProviderID" ColumnName="ProviderID" />
-                <ScalarProperty Name="CommissionPercentage" ColumnName="CommissionPercentage" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
                 <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CommissionPercentage" ColumnName="CommissionPercentage" />
+                <ScalarProperty Name="ProviderID" ColumnName="ProviderID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CommissionID" ColumnName="CommissionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommissionTransactions">
+            <EntityTypeMapping TypeName="todorechargeModel.CommissionTransaction">
+              <MappingFragment StoreEntitySet="CommissionTransaction">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CommissionBalance" ColumnName="CommissionBalance" />
+                <ScalarProperty Name="CommissionTransactionDescription" ColumnName="CommissionTransactionDescription" />
+                <ScalarProperty Name="CommissionTransactionAmount" ColumnName="CommissionTransactionAmount" />
+                <ScalarProperty Name="CommissionTransactionReferenceID" ColumnName="CommissionTransactionReferenceID" />
+                <ScalarProperty Name="CommissionTransactionReferenceDescription" ColumnName="CommissionTransactionReferenceDescription" />
+                <ScalarProperty Name="CommissionTransactionDate" ColumnName="CommissionTransactionDate" />
+                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CommissionTransactionID" ColumnName="CommissionTransactionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="todorechargeModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="ContactAddress" ColumnName="ContactAddress" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
                 <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ContactAddress" ColumnName="ContactAddress" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Providers">
             <EntityTypeMapping TypeName="todorechargeModel.Provider">
               <MappingFragment StoreEntitySet="Provider">
-                <ScalarProperty Name="ProviderID" ColumnName="ProviderID" />
-                <ScalarProperty Name="ProviderName" ColumnName="ProviderName" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
                 <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ProviderName" ColumnName="ProviderName" />
+                <ScalarProperty Name="ProviderID" ColumnName="ProviderID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Recharges">
             <EntityTypeMapping TypeName="todorechargeModel.Recharge">
               <MappingFragment StoreEntitySet="Recharge">
-                <ScalarProperty Name="RechargeID" ColumnName="RechargeID" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="isError" ColumnName="isError" />
-                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
-                <ScalarProperty Name="Partnerid" ColumnName="Partnerid" />
-                <ScalarProperty Name="RechargeTo" ColumnName="RechargeTo" />
-                <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="ProviderId" ColumnName="ProviderId" />
-                <ScalarProperty Name="Profit" ColumnName="Profit" />
-                <ScalarProperty Name="OperatorReference" ColumnName="OperatorReference" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Statement" ColumnName="Statement" />
-                <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
                 <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RechargeReferenceIDFromNetwork" ColumnName="RechargeReferenceIDFromNetwork" />
+                <ScalarProperty Name="RechargeReferenceIDFromAPI" ColumnName="RechargeReferenceIDFromAPI" />
+                <ScalarProperty Name="RechargeStatusDescription" ColumnName="RechargeStatusDescription" />
+                <ScalarProperty Name="RechargeStatus" ColumnName="RechargeStatus" />
+                <ScalarProperty Name="DateAndTime" ColumnName="DateAndTime" />
+                <ScalarProperty Name="RechargeAmount" ColumnName="RechargeAmount" />
+                <ScalarProperty Name="NetworkName" ColumnName="NetworkName" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="RechargeID" ColumnName="RechargeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WalletTransactions">
             <EntityTypeMapping TypeName="todorechargeModel.WalletTransaction">
               <MappingFragment StoreEntitySet="WalletTransaction">
-                <ScalarProperty Name="IsProfitTransfer" ColumnName="IsProfitTransfer" />
-                <ScalarProperty Name="ComissionTotal" ColumnName="ComissionTotal" />
-                <ScalarProperty Name="WalletTransactionID" ColumnName="WalletTransactionID" />
-                <ScalarProperty Name="TransactionTypeID" ColumnName="TransactionTypeID" />
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Reference" ColumnName="Reference" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="IsRecharge" ColumnName="IsRecharge" />
-                <ScalarProperty Name="WalletTransactionAmount" ColumnName="WalletTransactionAmount" />
-                <ScalarProperty Name="WalletBalance" ColumnName="WalletBalance" />
-                <ScalarProperty Name="RechargeAmount" ColumnName="RechargeAmount" />
-                <ScalarProperty Name="ComissionAmount" ColumnName="ComissionAmount" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="WalletBalance" ColumnName="WalletBalance" />
+                <ScalarProperty Name="WalletTransactionDescription" ColumnName="WalletTransactionDescription" />
+                <ScalarProperty Name="WalletTransactionAmount" ColumnName="WalletTransactionAmount" />
+                <ScalarProperty Name="WalletTransactionReferenceID" ColumnName="WalletTransactionReferenceID" />
+                <ScalarProperty Name="WalletTransactionReferenceDescription" ColumnName="WalletTransactionReferenceDescription" />
+                <ScalarProperty Name="WalletTransactionDate" ColumnName="WalletTransactionDate" />
+                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="WalletTransactionID" ColumnName="WalletTransactionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

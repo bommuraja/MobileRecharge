@@ -15,22 +15,20 @@ namespace KarateJanNine
     public partial class Recharge
     {
         public int RechargeID { get; set; }
-        public string Message { get; set; }
-        public string isError { get; set; }
-        public string TimeStamp { get; set; }
-        public string Partnerid { get; set; }
-        public string RechargeTo { get; set; }
-        public string OperatorName { get; set; }
-        public string Amount { get; set; }
-        public string ProviderId { get; set; }
-        public string Profit { get; set; }
-        public string OperatorReference { get; set; }
-        public string Status { get; set; }
-        public string Statement { get; set; }
-        public string PaymentId { get; set; }
+        public int CustomerID { get; set; }
+        public string MobileNumber { get; set; }
+        public string NetworkName { get; set; }
+        public string RechargeAmount { get; set; }
+        public string DateAndTime { get; set; }
+        public string RechargeStatus { get; set; }
+        public string RechargeStatusDescription { get; set; }
+        public string RechargeReferenceIDFromAPI { get; set; }
+        public string RechargeReferenceIDFromNetwork { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public string LastModifiedDate { get; set; }
         public string LastModifiedBy { get; set; }
+    
+        public virtual Customer Customer { get; set; }
     }
 }

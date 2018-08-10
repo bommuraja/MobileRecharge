@@ -27,6 +27,7 @@ namespace KarateJanNine
     
         public DbSet<CashTransaction> CashTransactions { get; set; }
         public DbSet<Commission> Commissions { get; set; }
+        public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Recharge> Recharges { get; set; }
