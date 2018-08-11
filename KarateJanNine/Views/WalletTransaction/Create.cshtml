@@ -1,0 +1,108 @@
+﻿@model KarateJanNine.WalletTransaction
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>WalletTransaction</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CustomerID, "Customer")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CustomerID", String.Empty)
+            @Html.ValidationMessageFor(model => model.CustomerID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsCredit)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsCredit)
+            @Html.ValidationMessageFor(model => model.IsCredit)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletTransactionDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletTransactionDate)
+            @Html.ValidationMessageFor(model => model.WalletTransactionDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletTransactionReferenceDescription)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletTransactionReferenceDescription)
+            @Html.ValidationMessageFor(model => model.WalletTransactionReferenceDescription)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletTransactionReferenceID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletTransactionReferenceID)
+            @Html.ValidationMessageFor(model => model.WalletTransactionReferenceID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletTransactionAmount)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletTransactionAmount)
+            @Html.ValidationMessageFor(model => model.WalletTransactionAmount)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletTransactionDescription)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletTransactionDescription)
+            @Html.ValidationMessageFor(model => model.WalletTransactionDescription)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WalletBalance)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WalletBalance)
+            @Html.ValidationMessageFor(model => model.WalletBalance)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatedDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedDate)
+            @Html.ValidationMessageFor(model => model.CreatedDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatedBy)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedBy)
+            @Html.ValidationMessageFor(model => model.CreatedBy)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

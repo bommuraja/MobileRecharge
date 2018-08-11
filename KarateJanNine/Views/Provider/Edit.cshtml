@@ -1,0 +1,76 @@
+﻿@model KarateJanNine.Provider
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    <legend>Provider</legend>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ProviderID)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.ProviderID)
+        @Html.ValidationMessageFor(model => model.ProviderID)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ProviderName)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.ProviderName)
+        @Html.ValidationMessageFor(model => model.ProviderName)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CreatedDate)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CreatedDate)
+        @Html.ValidationMessageFor(model => model.CreatedDate)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CreatedBy)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CreatedBy)
+        @Html.ValidationMessageFor(model => model.CreatedBy)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.LastModifiedDate)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.LastModifiedDate)
+        @Html.ValidationMessageFor(model => model.LastModifiedDate)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.LastModifiedBy)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.LastModifiedBy)
+        @Html.ValidationMessageFor(model => model.LastModifiedBy)
+    </div>
+
+    <p>
+        <input type="submit" value="Save" />
+    </p>
+</fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

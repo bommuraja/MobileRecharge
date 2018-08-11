@@ -175,7 +175,14 @@
       <DependentUpon>RechargeDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CashTransactionController.cs" />
+    <Compile Include="Controllers\CommissionController.cs" />
+    <Compile Include="Controllers\CommissionTransactionController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProviderController.cs" />
+    <Compile Include="Controllers\RechargeController.cs" />
+    <Compile Include="Controllers\WalletTransactionController.cs" />
     <Compile Include="Customer.cs">
       <DependentUpon>RechargeDataModel.tt</DependentUpon>
     </Compile>
@@ -508,6 +515,36 @@
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\Home\HomePage.cshtml" />
     <Content Include="Views\PhotoGallery\_sliderDetails.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Customer\Details.cshtml" />
+    <Content Include="Views\Customer\Create.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Delete.cshtml" />
+    <Content Include="Views\Provider\Index.cshtml" />
+    <Content Include="Views\Provider\Details.cshtml" />
+    <Content Include="Views\Provider\Create.cshtml" />
+    <Content Include="Views\Provider\Edit.cshtml" />
+    <Content Include="Views\Provider\Delete.cshtml" />
+    <Content Include="Views\Commission\Index.cshtml" />
+    <Content Include="Views\Commission\Details.cshtml" />
+    <Content Include="Views\Commission\Create.cshtml" />
+    <Content Include="Views\Commission\Edit.cshtml" />
+    <Content Include="Views\Commission\Delete.cshtml" />
+    <Content Include="Views\CashTransaction\Index.cshtml" />
+    <Content Include="Views\CashTransaction\Details.cshtml" />
+    <Content Include="Views\CashTransaction\Create.cshtml" />
+    <Content Include="Views\CashTransaction\Edit.cshtml" />
+    <Content Include="Views\CashTransaction\Delete.cshtml" />
+    <Content Include="Views\WalletTransaction\Index.cshtml" />
+    <Content Include="Views\WalletTransaction\Details.cshtml" />
+    <Content Include="Views\WalletTransaction\Create.cshtml" />
+    <Content Include="Views\WalletTransaction\Edit.cshtml" />
+    <Content Include="Views\WalletTransaction\Delete.cshtml" />
+    <Content Include="Views\CommissionTransaction\Index.cshtml" />
+    <Content Include="Views\CommissionTransaction\Details.cshtml" />
+    <Content Include="Views\CommissionTransaction\Create.cshtml" />
+    <Content Include="Views\CommissionTransaction\Edit.cshtml" />
+    <Content Include="Views\CommissionTransaction\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

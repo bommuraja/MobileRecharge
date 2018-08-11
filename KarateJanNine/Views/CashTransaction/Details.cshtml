@@ -1,0 +1,85 @@
+﻿@model KarateJanNine.CashTransaction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>CashTransaction</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Customer.CustomerName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customer.CustomerName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsCredit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsCredit)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashTransactionDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashTransactionDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashTransactionReferenceDescription)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashTransactionReferenceDescription)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashTransactionReferenceID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashTransactionReferenceID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashTransactionAmount)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashTransactionAmount)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashTransactionDescription)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashTransactionDescription)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CashBalance)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CashBalance)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreatedDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreatedDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreatedBy)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreatedBy)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.CashTransactionID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

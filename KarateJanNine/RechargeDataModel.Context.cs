@@ -13,10 +13,10 @@ namespace KarateJanNine
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class todorechargeEntities : DbContext
+    public partial class RechargeEntities : DbContext
     {
-        public todorechargeEntities()
-            : base("name=todorechargeEntities")
+        public RechargeEntities()
+            : base("name=RechargeEntities")
         {
         }
     

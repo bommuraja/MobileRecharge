@@ -116,13 +116,13 @@ namespace KarateJanNine.Controllers
         public ActionResult GetCustomerWalletBalance(string customerID)
         {
             var CustomerID = Convert.ToInt32(customerID);
-            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
-            var WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+            RechargeEntities objRechargeEntities = new RechargeEntities();
+            var WalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
             return Json(WalletBalanceAmount, JsonRequestBehavior.AllowGet);
         }
         public ActionResult RechargeFunction(DatasForRecharge objDatasForRecharge)
         {
-            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+            RechargeEntities objRechargeEntities = new RechargeEntities();
             LoginResponse objLoginResponse = new LoginResponse();
             int NetworkID = Convert.ToInt32(objDatasForRecharge.NetworkID);
           
@@ -143,13 +143,13 @@ namespace KarateJanNine.Controllers
                 newRecharge.CreatedBy = objDatasForRecharge.CreatedBy;
                 newRecharge.LastModifiedDate = objDatasForRecharge.LastModifiedDate;
                 newRecharge.LastModifiedBy = objDatasForRecharge.LastModifiedBy;
-                objtodorechargeEntities.Recharges.Add(newRecharge);
-                objtodorechargeEntities.SaveChanges();
+                objRechargeEntities.Recharges.Add(newRecharge);
+                objRechargeEntities.SaveChanges();
 
                 if (objDatasForRecharge.RechargeStatus.ToLower() != "failed")
                 {
                     // 2. Wallet Transaction
-                    var LastWalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
+                    var LastWalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
 
                     WalletTransaction objWalletTransaction = new WalletTransaction();
                     objWalletTransaction.CustomerID = objDatasForRecharge.CustomerID;
@@ -162,12 +162,12 @@ namespace KarateJanNine.Controllers
                     objWalletTransaction.WalletBalance = (Convert.ToDecimal(LastWalletBalanceAmount) - Convert.ToDecimal(objDatasForRecharge.RechargeAmount)).ToString();
                     objWalletTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
                     objWalletTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
-                    objtodorechargeEntities.WalletTransactions.Add(objWalletTransaction);
-                    objtodorechargeEntities.SaveChanges();
+                    objRechargeEntities.WalletTransactions.Add(objWalletTransaction);
+                    objRechargeEntities.SaveChanges();
 
                     // 3. Commission Tranction
-                    var LastCommissionBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
-                    var ThisRechargeCommisionPercentage = objtodorechargeEntities.Commissions.OrderByDescending(n => n.CommissionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID && m.ProviderID == NetworkID).FirstOrDefault().CommissionPercentage;
+                    var LastCommissionBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                    var ThisRechargeCommisionPercentage = objRechargeEntities.Commissions.OrderByDescending(n => n.CommissionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID && m.ProviderID == NetworkID).FirstOrDefault().CommissionPercentage;
                     var ThisRechargeCommissionAmount = (Convert.ToDecimal(objDatasForRecharge.RechargeAmount) * Convert.ToDecimal(ThisRechargeCommisionPercentage)) / 100;
 
 
@@ -182,17 +182,17 @@ namespace KarateJanNine.Controllers
                     objCommissionTransaction.CommissionBalance = (Convert.ToDecimal(LastCommissionBalanceAmount) + Convert.ToDecimal(ThisRechargeCommissionAmount)).ToString(); ;
                     objCommissionTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
                     objCommissionTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
-                    objtodorechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
-                    objtodorechargeEntities.SaveChanges();
+                    objRechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
+                    objRechargeEntities.SaveChanges();
 
                 }
                 var WalletBalanceAmount = "0.00";
                 var ProfitBalanceAmount = "0.00";
 
-                WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
+                WalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
                 WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
 
-                ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                ProfitBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
                 ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
 
                 objLoginResponse.CustomerID = objDatasForRecharge.CustomerID.ToString();
@@ -261,18 +261,18 @@ namespace KarateJanNine.Controllers
 
             try
             {
-                todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+                RechargeEntities objRechargeEntities = new RechargeEntities();
 
-                var Customer = objtodorechargeEntities.Customers.Where(m => m.UserName == objDatasForLogin.userName && m.Password == objDatasForLogin.password).ToList();
+                var Customer = objRechargeEntities.Customers.Where(m => m.UserName == objDatasForLogin.userName && m.Password == objDatasForLogin.password).ToList();
                 var WalletBalanceAmount = "0.00";
                 var ProfitBalanceAmount = "0.00";
                 if (Customer.Count == 1)
                 {
                     CustomerID = Customer[0].CustomerID;
-                    WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+                    WalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
                     WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
 
-                    ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
+                    ProfitBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
                     ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
                 }
                 objLoginResponse.CustomerID = CustomerID.ToString();
@@ -298,11 +298,11 @@ namespace KarateJanNine.Controllers
         public ActionResult MoveProfitToBalanceFunction(TransferProfitToWallet objTransferProfitToWallet)
         {
             int CustomerID = Convert.ToInt32(objTransferProfitToWallet.CustomerID);
-            todorechargeEntities objtodorechargeEntities = new todorechargeEntities();
+            RechargeEntities objRechargeEntities = new RechargeEntities();
             try
             {
                 // 3. Commission Tranction
-                var LastCommissionBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
+                var LastCommissionBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
 
 
                 CommissionTransaction objCommissionTransaction = new CommissionTransaction();
@@ -316,10 +316,10 @@ namespace KarateJanNine.Controllers
                 objCommissionTransaction.CommissionBalance = "0" ;
                 objCommissionTransaction.CreatedDate = objTransferProfitToWallet.DateAndTime;
                 objCommissionTransaction.CreatedBy = objTransferProfitToWallet.CreatedBy;
-                objtodorechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
-                objtodorechargeEntities.SaveChanges();
+                objRechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
+                objRechargeEntities.SaveChanges();
 
-                var LastWalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+                var LastWalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
 
                 WalletTransaction objWalletTransaction = new WalletTransaction();
                 objWalletTransaction.CustomerID = CustomerID;
@@ -332,18 +332,18 @@ namespace KarateJanNine.Controllers
                 objWalletTransaction.WalletBalance = (Convert.ToDecimal(LastWalletBalanceAmount) + Convert.ToDecimal(LastCommissionBalanceAmount)).ToString();
                 objWalletTransaction.CreatedDate = objTransferProfitToWallet.DateAndTime;
                 objWalletTransaction.CreatedBy = objTransferProfitToWallet.CreatedBy;
-                objtodorechargeEntities.WalletTransactions.Add(objWalletTransaction);
-                objtodorechargeEntities.SaveChanges();
+                objRechargeEntities.WalletTransactions.Add(objWalletTransaction);
+                objRechargeEntities.SaveChanges();
 
                 LoginResponse objLoginResponse = new LoginResponse();
 
                 var WalletBalanceAmount = "0.00";
                 var ProfitBalanceAmount = "0.00";
 
-                WalletBalanceAmount = objtodorechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
+                WalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().WalletBalance;
                 WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
 
-                ProfitBalanceAmount = objtodorechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
+                ProfitBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == CustomerID).FirstOrDefault().CommissionBalance;
                 ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
 
                 objLoginResponse.CustomerID = CustomerID.ToString();

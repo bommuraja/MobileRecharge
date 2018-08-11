@@ -1,0 +1,84 @@
+﻿@model KarateJanNine.Commission
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Commission</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CustomerID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CustomerID)
+            @Html.ValidationMessageFor(model => model.CustomerID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ProviderID, "Provider")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ProviderID", String.Empty)
+            @Html.ValidationMessageFor(model => model.ProviderID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CommissionPercentage)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CommissionPercentage)
+            @Html.ValidationMessageFor(model => model.CommissionPercentage)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatedDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedDate)
+            @Html.ValidationMessageFor(model => model.CreatedDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatedBy)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedBy)
+            @Html.ValidationMessageFor(model => model.CreatedBy)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastModifiedDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastModifiedDate)
+            @Html.ValidationMessageFor(model => model.LastModifiedDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastModifiedBy)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastModifiedBy)
+            @Html.ValidationMessageFor(model => model.LastModifiedBy)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -422,7 +422,7 @@
                 var netWorkidvalue = $('#operatorList').val();
                 var netWorktextvalue = $('#operatorList option:selected').text();
                 var amount = $('#rechargeAmount').val();
-                RechargeFunction(mobileNumber, netWorkidvalue, netWorktextvalue, amount);
+                RechargeFunctionTest(mobileNumber, netWorkidvalue, netWorktextvalue, amount);
                 currentTab = previousTab;
             }
         }
@@ -802,6 +802,85 @@
                 }
 
             });
+        }
+
+        // 2. Recharge function dummy
+        function RechargeFunctionTest(mobileNumber, netWorkidvalue, netWorktextvalue, amount) {
+
+         
+                        // 1. response.data.amount = 10
+                        // 2. response.data.bal = "210.8625"
+                        // 3. response.data.creditUsed = "9.9025"
+                        // 4. response.data.error_code = "201"
+                        // 5. response.data.mobile = "8754137742"
+                        // 6. response.data.operatorId = 0
+                        // 7. response.data.orderId = 80339798
+                        // 8.  response.data.resText = "Recharge Pending"
+                        // 9. response.data.service = "Airtel"
+                        // 10. response.data.status = "PENDING"
+                        var objDatasForRecharge = new DatasForRecharge();
+                        objDatasForRecharge.CustomerID = $('#customerID').val();
+                        objDatasForRecharge.MobileNumber = mobileNumber;
+                        objDatasForRecharge.NetworkName = netWorktextvalue;
+                        objDatasForRecharge.NetworkID = netWorkidvalue;
+                        objDatasForRecharge.RechargeAmount = amount;
+                        objDatasForRecharge.DateAndTime = GetTodayDateWithTime();
+                        objDatasForRecharge.RechargeStatus = 'Pending';
+                        objDatasForRecharge.RechargeStatusDescription = 'Recharge status pending';
+                        objDatasForRecharge.RechargeReferenceIDFromAPI = '52468';
+                        objDatasForRecharge.RechargeReferenceIDFromNetwork = '';
+                        objDatasForRecharge.CreatedDate = GetTodayDateWithTime();
+                        objDatasForRecharge.CreatedBy = $('#userName').val();
+                        objDatasForRecharge.LastModifiedDate = GetTodayDateWithTime();
+                        objDatasForRecharge.LastModifiedBy = $('#userName').val();
+
+
+
+                        $.ajax({
+
+                            type: "POST",
+                            url: "/Home/RechargeFunction",
+                            data: JSON.stringify(objDatasForRecharge),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            beforeSend: function () {
+                                $(".busyModal").show();
+                            },
+                            success: function (response) {
+                                resetAllControls();
+                                $(".busyModal").hide();
+                                if (response != null) {
+                                    $("#BalanceDisplay").empty();
+                                    $("#BalanceDisplay").append("Wallet Balance : " + response.WalletBalance);
+                                    $("#hdnWalletBalance").val(response.WalletBalance);
+
+                                    $("#ProfitDisplay").empty();
+                                    $("#ProfitDisplay").append("Profit : " + response.ProfitBalance);
+                                    $("#hdnProfitBalance").val(response.ProfitBalance);
+
+                                    $('#successModal').modal('show');
+                                    $(".modal-body #successText").empty();
+                                    $(".modal-body #successText").append(response.StatusDescription);
+                                } else {
+                                    $('#warningModal').modal('show');
+                                    $(".modal-body #warningText").empty();
+                                    $(".modal-body #warningText").append('Recharge failed try again');
+                                }
+                            },
+                            failure: function (response) {
+                                $('#warningModal').modal('show');
+                                $(".modal-body #warningText").empty();
+                                $(".modal-body #warningText").append('Recharge failed try again');
+                            },
+                            error: function (response) {
+                                $('#warningModal').modal('show');
+                                $(".modal-body #warningText").empty();
+                                $(".modal-body #warningText").append('Recharge failed try again');
+                            }
+
+                        });
+
+                    
         }
 
         // Add-on

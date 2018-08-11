@@ -1,0 +1,95 @@
+﻿@model IEnumerable<KarateJanNine.CashTransaction>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer.CustomerName)
+        </th>
+        <th>
+           CashTransID
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsCredit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CashTransactionDate)
+        </th>
+        <th>
+            Ref
+            @*@Html.DisplayNameFor(model => model.CashTransactionReferenceDescription)*@
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.CashTransactionReferenceID)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.CashTransactionAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CashTransactionDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CashBalance)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </th>*@
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.CustomerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CashTransactionID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsCredit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CashTransactionDate)
+        </td>
+        <td>
+            
+            @Html.DisplayFor(modelItem => item.CashTransactionReferenceDescription)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.CashTransactionReferenceID)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.CashTransactionAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CashTransactionDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CashBalance)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.CreatedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedBy)
+        </td>*@
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.CashTransactionID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.CashTransactionID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.CashTransactionID })
+        </td>
+    </tr>
+}
+
+</table>
