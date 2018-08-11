@@ -145,7 +145,6 @@ namespace KarateJanNine.Controllers
                 newRecharge.LastModifiedBy = objDatasForRecharge.LastModifiedBy;
                 objRechargeEntities.Recharges.Add(newRecharge);
                 objRechargeEntities.SaveChanges();
-
                 if (objDatasForRecharge.RechargeStatus.ToLower() != "failed")
                 {
                     // 2. Wallet Transaction
@@ -208,6 +207,9 @@ namespace KarateJanNine.Controllers
             {
                 var exceptionDetails = ex;
                 objLoginResponse.CustomerID = "-99";
+                objLoginResponse.WalletBalance = ex.StackTrace;
+                objLoginResponse.StatusDescription = ex.Message;
+                //objLoginResponse.CustomerID = ex.InnerException;
                 return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
 
             }
