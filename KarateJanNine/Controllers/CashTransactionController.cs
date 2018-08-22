@@ -40,6 +40,7 @@ namespace KarateJanNine.Controllers
         public ActionResult Create()
         {
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName");
+
             return View();
         }
 
@@ -52,6 +53,8 @@ namespace KarateJanNine.Controllers
         {
             if (ModelState.IsValid)
             {
+                var lastCashBalance = db.CashTransactions.Where(m => m.CustomerID == cashtransaction.CustomerID).OrderByDescending(m=>m.CashTransactionID).FirstOrDefault().CashBalance;
+                cashtransaction.CashBalance = (Convert.ToDecimal(cashtransaction.CashTransactionAmount) + Convert.ToDecimal(lastCashBalance)).ToString();
                 db.CashTransactions.Add(cashtransaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");

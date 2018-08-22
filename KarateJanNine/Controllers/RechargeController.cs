@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,20 +10,28 @@ namespace KarateJanNine.Controllers
 {
     public class RechargeController : Controller
     {
+        private RechargeEntities db = new RechargeEntities();
+
         //
         // GET: /Recharge/
 
         public ActionResult Index()
         {
-            return View();
+            var recharges = db.Recharges.Include(r => r.Customer);
+            return View(recharges.ToList());
         }
 
         //
         // GET: /Recharge/Details/5
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id = 0)
         {
-            return View();
+            Recharge recharge = db.Recharges.Find(id);
+            if (recharge == null)
+            {
+                return HttpNotFound();
+            }
+            return View(recharge);
         }
 
         //
@@ -29,6 +39,7 @@ namespace KarateJanNine.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName");
             return View();
         }
 
@@ -36,72 +47,81 @@ namespace KarateJanNine.Controllers
         // POST: /Recharge/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Recharge recharge)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
+                db.Recharges.Add(recharge);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName", recharge.CustomerID);
+            return View(recharge);
         }
 
         //
         // GET: /Recharge/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id = 0)
         {
-            return View();
+            Recharge recharge = db.Recharges.Find(id);
+            if (recharge == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName", recharge.CustomerID);
+            return View(recharge);
         }
 
         //
         // POST: /Recharge/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Recharge recharge)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
+                db.Entry(recharge).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CustomerName", recharge.CustomerID);
+            return View(recharge);
         }
 
         //
         // GET: /Recharge/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id = 0)
         {
-            return View();
+            Recharge recharge = db.Recharges.Find(id);
+            if (recharge == null)
+            {
+                return HttpNotFound();
+            }
+            return View(recharge);
         }
 
         //
         // POST: /Recharge/Delete/5
 
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            Recharge recharge = db.Recharges.Find(id);
+            db.Recharges.Remove(recharge);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-       
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

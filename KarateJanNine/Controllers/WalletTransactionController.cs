@@ -52,8 +52,27 @@ namespace KarateJanNine.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.WalletTransactions.Add(wallettransaction);
+                var lastWalletBalance = db.WalletTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m=>m.WalletTransactionID).FirstOrDefault().WalletBalance;
+                wallettransaction.WalletBalance = (Convert.ToDecimal(wallettransaction.WalletTransactionAmount) + Convert.ToDecimal(lastWalletBalance)).ToString();
+                db.WalletTransactions.Add(wallettransaction);            
+
                 db.SaveChanges();
+
+                var lastCashBalance = db.CashTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m=>m.CashTransactionID).FirstOrDefault().CashBalance;
+
+                CashTransaction cashtransaction = new CashTransaction();
+                cashtransaction.IsCredit = false;
+                cashtransaction.CustomerID = wallettransaction.CustomerID;
+                cashtransaction.CreatedDate = wallettransaction.CreatedDate;
+                cashtransaction.CreatedBy = wallettransaction.CreatedBy;
+                cashtransaction.CashTransactionReferenceID = wallettransaction.WalletTransactionID.ToString();
+                cashtransaction.CashTransactionReferenceDescription = "WalletTransaction";
+                cashtransaction.CashTransactionDescription = "Debit amount from cash transaction";
+                cashtransaction.CashTransactionAmount = wallettransaction.WalletTransactionAmount;
+                cashtransaction.CashBalance = (Convert.ToDecimal(lastCashBalance) - Convert.ToDecimal(wallettransaction.WalletTransactionAmount)).ToString();
+                db.CashTransactions.Add(cashtransaction);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 

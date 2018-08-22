@@ -488,6 +488,11 @@
     <Content Include="Views\CommissionTransaction\Create.cshtml" />
     <Content Include="Views\CommissionTransaction\Edit.cshtml" />
     <Content Include="Views\CommissionTransaction\Delete.cshtml" />
+    <Content Include="Views\Recharge\Index.cshtml" />
+    <Content Include="Views\Recharge\Details.cshtml" />
+    <Content Include="Views\Recharge\Create.cshtml" />
+    <Content Include="Views\Recharge\Edit.cshtml" />
+    <Content Include="Views\Recharge\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

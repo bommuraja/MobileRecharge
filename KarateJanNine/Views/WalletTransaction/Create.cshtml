@@ -1,12 +1,16 @@
-﻿@model KarateJanNine.WalletTransaction
+﻿@{
+    Layout = null;
+}
+@model KarateJanNine.WalletTransaction
 
 @{
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+@*<h2>Create</h2>*@
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
@@ -21,40 +25,44 @@
             @Html.ValidationMessageFor(model => model.CustomerID)
         </div>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.IsCredit)
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.IsCredit)
             @Html.ValidationMessageFor(model => model.IsCredit)
-        </div>
+        </div>*@
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.WalletTransactionDate)
+            Trans Date :
+            @*@Html.LabelFor(model => model.WalletTransactionDate)*@
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.WalletTransactionDate)
             @Html.ValidationMessageFor(model => model.WalletTransactionDate)
         </div>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
+            Ref Desc :
             @Html.LabelFor(model => model.WalletTransactionReferenceDescription)
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.WalletTransactionReferenceDescription)
             @Html.ValidationMessageFor(model => model.WalletTransactionReferenceDescription)
-        </div>
+        </div>*@
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.WalletTransactionReferenceID)
-        </div>
+        @*<div class="editor-label">
+            Ref ID :*@
+            @*@Html.LabelFor(model => model.WalletTransactionReferenceID)*@
+        @*</div>
         <div class="editor-field">
             @Html.EditorFor(model => model.WalletTransactionReferenceID)
             @Html.ValidationMessageFor(model => model.WalletTransactionReferenceID)
-        </div>
+        </div>*@
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.WalletTransactionAmount)
+            Trans Amount :
+            @*@Html.LabelFor(model => model.WalletTransactionAmount)*@
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.WalletTransactionAmount)
@@ -62,14 +70,15 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.WalletTransactionDescription)
+            Trans Desc :
+            @*@Html.LabelFor(model => model.WalletTransactionDescription)*@
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.WalletTransactionDescription)
             @Html.ValidationMessageFor(model => model.WalletTransactionDescription)
         </div>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.WalletBalance)
         </div>
         <div class="editor-field">
@@ -83,7 +92,7 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.CreatedDate)
             @Html.ValidationMessageFor(model => model.CreatedDate)
-        </div>
+        </div>*@
 
         <div class="editor-label">
             @Html.LabelFor(model => model.CreatedBy)

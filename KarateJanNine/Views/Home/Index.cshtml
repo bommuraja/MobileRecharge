@@ -422,7 +422,7 @@
                 var netWorkidvalue = $('#operatorList').val();
                 var netWorktextvalue = $('#operatorList option:selected').text();
                 var amount = $('#rechargeAmount').val();
-                RechargeFunctionTest(mobileNumber, netWorkidvalue, netWorktextvalue, amount);
+                RechargeFunction(mobileNumber, netWorkidvalue, netWorktextvalue, amount);
                 currentTab = previousTab;
             }
         }
@@ -575,18 +575,6 @@
             } else {
                 alert('false');
             }
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
         function WalletBalanceFunction() {
