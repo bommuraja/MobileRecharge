@@ -53,6 +53,8 @@ namespace KarateJanNine.Controllers
             if (ModelState.IsValid)
             {
                 var lastWalletBalance = db.WalletTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m=>m.WalletTransactionID).FirstOrDefault().WalletBalance;
+                wallettransaction.IsCredit = true;
+                wallettransaction.CreatedDate = DateTime.Now.ToString();
                 wallettransaction.WalletBalance = (Convert.ToDecimal(wallettransaction.WalletTransactionAmount) + Convert.ToDecimal(lastWalletBalance)).ToString();
                 db.WalletTransactions.Add(wallettransaction);            
 

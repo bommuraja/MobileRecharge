@@ -9,19 +9,29 @@
 
 @*<h2>Create</h2>*@
 
+<style type="text/css">
+    input, select {
+        padding: 10px;
+        width: 98%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
+    }
+</style>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>CashTransaction</legend>
+    @*<fieldset>
+        <legend>CashTransaction</legend>*@
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.CustomerID, "Customer")
-        </div>
+        </div>*@
         <div class="editor-field">
-            @Html.DropDownList("CustomerID", String.Empty)
+            @Html.DropDownList("CustomerID","Select Customer")
             @Html.ValidationMessageFor(model => model.CustomerID)
         </div>
 
@@ -33,50 +43,61 @@
             @Html.ValidationMessageFor(model => model.IsCredit)
         </div>*@
 
-        <div class="editor-label">
+        @*<div class="editor-label">*@
             @*@Html.LabelFor(model => model.CashTransactionDate)*@
-            Trans Date
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CashTransactionDate)
-            @Html.ValidationMessageFor(model => model.CashTransactionDate)
-        </div>
+            @*Trans Date
+        </div>*@
+        <p>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CashTransactionDate, new { placeholder = "Trans Date" })
+                @Html.ValidationMessageFor(model => model.CashTransactionDate)
+            </div>
+        </p>
 
-        <div class="editor-label">
+        @*<div class="editor-label">*@
             @*@Html.LabelFor(model => model.CashTransactionReferenceDescription)*@
-            Ref. Description
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CashTransactionReferenceDescription)
-            @Html.ValidationMessageFor(model => model.CashTransactionReferenceDescription)
-        </div>
+            @*Ref. Description
+        </div>*@
+        <p>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CashTransactionReferenceDescription, new { placeholder = "Ref. Description" })
+                @*@Html.EditorFor(model => model.CashTransactionReferenceDescription)*@
+                @Html.ValidationMessageFor(model => model.CashTransactionReferenceDescription)
+            </div>
+        </p>
 
-        <div class="editor-label">
-            Ref. ID
+        @*<div class="editor-label">
+            Ref. ID*@
             @*@Html.LabelFor(model => model.CashTransactionReferenceID)*@
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CashTransactionReferenceID)
-            @Html.ValidationMessageFor(model => model.CashTransactionReferenceID)
-        </div>
+        @*</div>*@
+        <p>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CashTransactionReferenceID, new { placeholder = "Ref. ID" })
+                @Html.ValidationMessageFor(model => model.CashTransactionReferenceID)
+            </div>
+        </p>
 
-        <div class="editor-label">
-            Trans Amount
+        @*<div class="editor-label">
+            Trans Amount*@
             @*@Html.LabelFor(model => model.CashTransactionAmount)*@
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CashTransactionAmount)
-            @Html.ValidationMessageFor(model => model.CashTransactionAmount)
-        </div>
+        @*</div>*@
+        <p>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CashTransactionAmount, new { placeholder = "Trans Amount" })
+                @Html.ValidationMessageFor(model => model.CashTransactionAmount)
+            </div>
+        </p>
 
-        <div class="editor-label">
-            Trans Description
+        @*<div class="editor-label">
+            Trans Description*@
             @*@Html.LabelFor(model => model.CashTransactionDescription)*@
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CashTransactionDescription)
-            @Html.ValidationMessageFor(model => model.CashTransactionDescription)
-        </div>
+        @*</div>*@
+        <p>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CashTransactionDescription, new { placeholder = "Trans Description" })
+                @Html.ValidationMessageFor(model => model.CashTransactionDescription)
+            </div>
+        </p>
 
         @*<div class="editor-label">
             @Html.LabelFor(model => model.CashBalance)
@@ -93,19 +114,19 @@
             @Html.EditorFor(model => model.CreatedDate)
             @Html.ValidationMessageFor(model => model.CreatedDate)
         </div>*@
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreatedBy)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreatedBy)
-            @Html.ValidationMessageFor(model => model.CreatedBy)
-        </div>
-
+        <p>
+            @*<div class="editor-label">
+                @Html.LabelFor(model => model.CreatedBy)
+            </div>*@
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CreatedBy, new { placeholder = "Created By" })
+                @Html.ValidationMessageFor(model => model.CreatedBy)
+            </div>
+        </p>
         <p>
             <input type="submit" value="Create" />
         </p>
-    </fieldset>
+    @*</fieldset>*@
 }
 
 <div>

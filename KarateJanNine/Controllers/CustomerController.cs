@@ -50,8 +50,61 @@ namespace KarateJanNine.Controllers
         {
             if (ModelState.IsValid)
             {
+                // 1. Customer table entry
+                customer.CreatedDate = DateTime.Now.ToString();
+                customer.LastModifiedDate = DateTime.Now.ToString();
                 db.Customers.Add(customer);
                 db.SaveChanges();
+                var CustomerID = customer.CustomerID;
+                // 2. Commission table entry
+                var ProvidersList = db.Providers.ToList();
+                for(int i=0;i< ProvidersList.Count;i++)
+                {
+                    Commission objCommission = new Commission();
+                    objCommission.CommissionPercentage = "1";
+                    objCommission.CreatedBy = customer.CreatedBy;
+                    objCommission.CreatedDate = customer.CreatedDate;
+                    objCommission.CustomerID = CustomerID;
+                    objCommission.LastModifiedBy = customer.LastModifiedBy;
+                    objCommission.LastModifiedDate = customer.LastModifiedDate;
+                    objCommission.ProviderID = ProvidersList[i].ProviderID;
+                    db.Commissions.Add(objCommission);
+                    db.SaveChanges();
+                }
+                // 3. CommissionTranaction table entry
+                CommissionTransaction objCommissionTransaction = new CommissionTransaction();
+
+
+                objCommissionTransaction.CreatedBy = customer.CreatedBy;
+                objCommissionTransaction.CreatedDate = customer.CreatedDate;
+                objCommissionTransaction.CustomerID = CustomerID;
+                objCommissionTransaction.CommissionBalance = "0";
+                objCommissionTransaction.CommissionTransactionAmount = "0";
+                objCommissionTransaction.CommissionTransactionDate = customer.CreatedDate;
+                objCommissionTransaction.CommissionTransactionDescription = "Primary Entry";
+                objCommissionTransaction.CommissionTransactionReferenceDescription = "From customer creation entry";
+                objCommissionTransaction.CommissionTransactionReferenceID = CustomerID.ToString();
+
+                objCommissionTransaction.CreatedBy = customer.CreatedBy;
+                objCommissionTransaction.CreatedDate = customer.CreatedDate;
+                objCommissionTransaction.IsCredit = true;
+                db.CommissionTransactions.Add(objCommissionTransaction);
+                db.SaveChanges();
+                // 4. WalletTransaction table entry
+                WalletTransaction objWalletTransaction = new WalletTransaction();
+                objWalletTransaction.CreatedBy = customer.CreatedBy;
+                objWalletTransaction.CreatedDate = customer.CreatedDate;
+                objWalletTransaction.CustomerID = CustomerID;
+                objWalletTransaction.IsCredit = true;
+                objWalletTransaction.WalletBalance = "0";
+                objWalletTransaction.WalletTransactionAmount = "0";
+                objWalletTransaction.WalletTransactionDate = customer.CreatedDate;
+                objWalletTransaction.WalletTransactionDescription = "Primary Entry";
+                objWalletTransaction.WalletTransactionReferenceDescription = "From customer creation entry";
+                objWalletTransaction.WalletTransactionReferenceID = CustomerID.ToString();
+                db.WalletTransactions.Add(objWalletTransaction);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
@@ -107,8 +160,31 @@ namespace KarateJanNine.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            // 4. Remove from wallet transaction table
+            var walletTransactions = db.WalletTransactions.Where(c => c.CustomerID == id).ToList();
+            foreach (var item in walletTransactions)
+            {
+                db.WalletTransactions.Remove(item);
+                db.SaveChanges();
+            }
+
+            // 3. Remove from commission transaction table
+            var commissionTransactions = db.CommissionTransactions.Where(c => c.CustomerID == id).ToList();
+            foreach (var item in commissionTransactions)
+            {
+                db.CommissionTransactions.Remove(item);
+                db.SaveChanges();
+            }
+            // 2. Remove from commission table
+            var commissions = db.Commissions.Where(c => c.CustomerID == id).ToList();
+            foreach (var item in commissions)
+            {
+                db.Commissions.Remove(item);
+                db.SaveChanges();
+            }
+            // 1. Remove from customer table
             Customer customer = db.Customers.Find(id);
-            db.Customers.Remove(customer);
+            db.Customers.Remove(customer);           
             db.SaveChanges();
             return RedirectToAction("Index");
         }

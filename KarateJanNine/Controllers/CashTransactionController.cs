@@ -55,6 +55,7 @@ namespace KarateJanNine.Controllers
             {
                 var lastCashBalance = db.CashTransactions.Where(m => m.CustomerID == cashtransaction.CustomerID).OrderByDescending(m=>m.CashTransactionID).FirstOrDefault().CashBalance;
                 cashtransaction.CashBalance = (Convert.ToDecimal(cashtransaction.CashTransactionAmount) + Convert.ToDecimal(lastCashBalance)).ToString();
+                cashtransaction.CreatedDate = DateTime.Now.ToString();
                 db.CashTransactions.Add(cashtransaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");

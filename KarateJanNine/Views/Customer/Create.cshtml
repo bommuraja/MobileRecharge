@@ -1,59 +1,79 @@
-﻿@model KarateJanNine.Customer
+﻿@{ 
+    Layout = null;
+}
+
+@model KarateJanNine.Customer
 
 @{
     ViewBag.Title = "Create";
 }
-
-<h2>Create</h2>
+<style type="text/css">
+    input {
+        padding: 10px;
+        width: 98%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
+    }
+</style>
+@*<h2>Create</h2>*@
 
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>Customer</legend>
+    @*<fieldset>
+        <legend>Customer</legend>*@
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.CustomerName)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CustomerName)
-            @Html.ValidationMessageFor(model => model.CustomerName)
-        </div>
+        </div>*@
+<p>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.CustomerName, new { placeholder = "CustomerName" })
+        @*@Html.ValidationMessageFor(model => model.CustomerName)*@
+    </div>
+</p>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.UserName)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UserName)
-            @Html.ValidationMessageFor(model => model.UserName)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Password)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
-
-        <div class="editor-label">
+        </div>*@
+<p>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.UserName, new { placeholder = "UserName" })
+        @*@Html.ValidationMessageFor(model => model.UserName)*@
+    </div>
+</p>
+        @*<div class="editor-label">
+           @Html.LabelFor(model => model.Password)
+        </div>*@
+<p>
+    <div class="editor-field">
+        @*@Html.EditorFor(model => model.Password)*@
+        @Html.TextBoxFor(model => model.Password, new { placeholder = "Password" })
+        @*@Html.ValidationMessageFor(model => model.Password)*@
+    </div>
+</p>
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.ContactNumber)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ContactNumber)
-            @Html.ValidationMessageFor(model => model.ContactNumber)
-        </div>
-
-        <div class="editor-label">
+        </div>*@
+<p>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ContactNumber, new { placeholder = "Contact Number" })
+        @*@Html.ValidationMessageFor(model => model.ContactNumber)*@
+    </div>
+</p>
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.EmailAddress)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EmailAddress)
-            @Html.ValidationMessageFor(model => model.EmailAddress)
-        </div>
+        </div>*@
+<p>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.EmailAddress, new { placeholder = "Email Address" })
+        @*@Html.ValidationMessageFor(model => model.EmailAddress)*@
+    </div>
+</p>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.ContactAddress)
         </div>
         <div class="editor-field">
@@ -91,12 +111,12 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.LastModifiedBy)
             @Html.ValidationMessageFor(model => model.LastModifiedBy)
-        </div>
+        </div>*@
 
         <p>
             <input type="submit" value="Create" />
         </p>
-    </fieldset>
+    @*</fieldset>*@
 }
 
 <div>
