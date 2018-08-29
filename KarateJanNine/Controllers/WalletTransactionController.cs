@@ -52,28 +52,37 @@ namespace KarateJanNine.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lastWalletBalance = db.WalletTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m=>m.WalletTransactionID).FirstOrDefault().WalletBalance;
-                wallettransaction.IsCredit = true;
-                wallettransaction.CreatedDate = DateTime.Now.ToString();
-                wallettransaction.WalletBalance = (Convert.ToDecimal(wallettransaction.WalletTransactionAmount) + Convert.ToDecimal(lastWalletBalance)).ToString();
-                db.WalletTransactions.Add(wallettransaction);            
+                using (var dbUse = new RechargeEntities())
+                {
+                    var lastWalletBalance = dbUse.WalletTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m => m.WalletTransactionID).FirstOrDefault().WalletBalance;
 
-                db.SaveChanges();
+                    wallettransaction.IsCredit = true;
+                    wallettransaction.CreatedDate = DateTime.Now.ToString();
+                    wallettransaction.WalletTransactionReferenceDescription = "CashTransaction";
+                    wallettransaction.WalletTransactionReferenceID = "0";
+                    wallettransaction.WalletTransactionDescription = "Move cash to wallet";
+                    wallettransaction.WalletBalance = (Convert.ToDecimal(wallettransaction.WalletTransactionAmount) + Convert.ToDecimal(lastWalletBalance)).ToString();
+                    dbUse.WalletTransactions.Add(wallettransaction);
 
-                var lastCashBalance = db.CashTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m=>m.CashTransactionID).FirstOrDefault().CashBalance;
+                    var lastCashBalance = dbUse.CashTransactions.Where(m => m.CustomerID == wallettransaction.CustomerID).OrderByDescending(m => m.CashTransactionID).FirstOrDefault().CashBalance;
 
-                CashTransaction cashtransaction = new CashTransaction();
-                cashtransaction.IsCredit = false;
-                cashtransaction.CustomerID = wallettransaction.CustomerID;
-                cashtransaction.CreatedDate = wallettransaction.CreatedDate;
-                cashtransaction.CreatedBy = wallettransaction.CreatedBy;
-                cashtransaction.CashTransactionReferenceID = wallettransaction.WalletTransactionID.ToString();
-                cashtransaction.CashTransactionReferenceDescription = "WalletTransaction";
-                cashtransaction.CashTransactionDescription = "Debit amount from cash transaction";
-                cashtransaction.CashTransactionAmount = wallettransaction.WalletTransactionAmount;
-                cashtransaction.CashBalance = (Convert.ToDecimal(lastCashBalance) - Convert.ToDecimal(wallettransaction.WalletTransactionAmount)).ToString();
-                db.CashTransactions.Add(cashtransaction);
-                db.SaveChanges();
+                    CashTransaction cashtransaction = new CashTransaction();
+                    cashtransaction.IsCredit = false;
+                    cashtransaction.CustomerID = wallettransaction.CustomerID;
+                    cashtransaction.CreatedDate = wallettransaction.CreatedDate;
+                    cashtransaction.CreatedBy = wallettransaction.CreatedBy;
+                    cashtransaction.CashTransactionReferenceID = wallettransaction.WalletTransactionID.ToString();
+                    cashtransaction.CashTransactionReferenceDescription = "WalletTransaction";
+                    cashtransaction.CashTransactionDescription = "Debit amount from cash transaction";
+                    cashtransaction.CashTransactionAmount = wallettransaction.WalletTransactionAmount;
+                    cashtransaction.CashBalance = (Convert.ToDecimal(lastCashBalance) - Convert.ToDecimal(wallettransaction.WalletTransactionAmount)).ToString();
+                    dbUse.CashTransactions.Add(cashtransaction);
+
+                    var updatedTransaction = dbUse.WalletTransactions.Find(wallettransaction.WalletTransactionID);
+                    updatedTransaction.WalletTransactionReferenceID = cashtransaction.CashTransactionID.ToString();
+                    dbUse.SaveChanges();
+
+                }
 
                 return RedirectToAction("Index");
             }

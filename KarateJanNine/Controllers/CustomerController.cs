@@ -54,7 +54,6 @@ namespace KarateJanNine.Controllers
                 customer.CreatedDate = DateTime.Now.ToString();
                 customer.LastModifiedDate = DateTime.Now.ToString();
                 db.Customers.Add(customer);
-                db.SaveChanges();
                 var CustomerID = customer.CustomerID;
                 // 2. Commission table entry
                 var ProvidersList = db.Providers.ToList();
@@ -69,7 +68,6 @@ namespace KarateJanNine.Controllers
                     objCommission.LastModifiedDate = customer.LastModifiedDate;
                     objCommission.ProviderID = ProvidersList[i].ProviderID;
                     db.Commissions.Add(objCommission);
-                    db.SaveChanges();
                 }
                 // 3. CommissionTranaction table entry
                 CommissionTransaction objCommissionTransaction = new CommissionTransaction();
@@ -87,7 +85,6 @@ namespace KarateJanNine.Controllers
                 objCommissionTransaction.CreatedDate = customer.CreatedDate;
                 objCommissionTransaction.IsCredit = true;
                 db.CommissionTransactions.Add(objCommissionTransaction);
-                db.SaveChanges();
                 // 4. WalletTransaction table entry
                 WalletTransaction objWalletTransaction = new WalletTransaction();
                 objWalletTransaction.CreatedBy = customer.CreatedBy;
@@ -101,7 +98,6 @@ namespace KarateJanNine.Controllers
                 objWalletTransaction.WalletTransactionReferenceDescription = "From customer creation entry";
                 objWalletTransaction.WalletTransactionReferenceID = CustomerID.ToString();
                 db.WalletTransactions.Add(objWalletTransaction);
-                db.SaveChanges();
                 // 5. CashTransaction table entry
                 CashTransaction objCashTransaction = new CashTransaction();
                 objCashTransaction.CashBalance = "0";
@@ -115,6 +111,7 @@ namespace KarateJanNine.Controllers
                 objCashTransaction.CustomerID = CustomerID;
                 objCashTransaction.IsCredit = true;
                 db.CashTransactions.Add(objCashTransaction);
+
                 db.SaveChanges();
 
 
@@ -179,14 +176,12 @@ namespace KarateJanNine.Controllers
             foreach (var item in cashTransactions)
             {
                 db.CashTransactions.Remove(item);
-                db.SaveChanges();
             }
             // 4. Remove from wallet transaction table
             var walletTransactions = db.WalletTransactions.Where(c => c.CustomerID == id).ToList();
             foreach (var item in walletTransactions)
             {
                 db.WalletTransactions.Remove(item);
-                db.SaveChanges();
             }
 
             // 3. Remove from commission transaction table
@@ -194,18 +189,17 @@ namespace KarateJanNine.Controllers
             foreach (var item in commissionTransactions)
             {
                 db.CommissionTransactions.Remove(item);
-                db.SaveChanges();
             }
             // 2. Remove from commission table
             var commissions = db.Commissions.Where(c => c.CustomerID == id).ToList();
             foreach (var item in commissions)
             {
                 db.Commissions.Remove(item);
-                db.SaveChanges();
             }
             // 1. Remove from customer table
             Customer customer = db.Customers.Find(id);
-            db.Customers.Remove(customer);           
+            db.Customers.Remove(customer);  
+            
             db.SaveChanges();
             return RedirectToAction("Index");
         }
