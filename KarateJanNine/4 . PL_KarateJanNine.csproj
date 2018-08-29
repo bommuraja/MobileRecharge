@@ -319,43 +319,6 @@
       <DependentUpon>RechargeDataModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Images\bg21.jpg" />
-    <Content Include="Images\bg17.jpg" />
-    <Content Include="Images\bg.jpg" />
-    <Content Include="Images\bg16.jpg" />
-    <Content Include="Images\bg14.jpg" />
-    <Content Include="Images\bg13.jpg" />
-    <Content Include="Images\bg11.jpg" />
-    <Content Include="Images\bg22.jpg" />
-    <Content Include="Images\bg7.jpg" />
-    <Content Include="Images\bg6.jpg" />
-    <Content Include="Images\bg4.jpg" />
-    <Content Include="Images\bg12.jpg" />
-    <Content Include="Images\bg2.jpg" />
-    <Content Include="Images\close.png" />
-    <Content Include="Images\Close_Button.jpg" />
-    <Content Include="Images\loading.gif" />
-    <Content Include="Images\next.png" />
-    <Content Include="Images\prev.png" />
-    <Content Include="Images\slide-1.jpg" />
-    <Content Include="Images\Home_Static_1.jpg" />
-    <Content Include="Images\Home_Static_2.png" />
-    <Content Include="Images\Home_Static_4.jpg" />
-    <Content Include="Images\Home_Static_5.png" />
-    <Content Include="Images\intro-pic.jpg" />
-    <Content Include="Images\ota_2.jpg" />
-    <Content Include="Images\Sensei G Senthil.JPG" />
-    <Content Include="Images\slide-12.jpg" />
-    <Content Include="Images\slide-13.jpg" />
-    <Content Include="Images\slide-14.JPG" />
-    <Content Include="Images\slide-16.JPG" />
-    <Content Include="Images\slide-18.jpg" />
-    <Content Include="Images\slide-2.jpg" />
-    <Content Include="Images\slide-3 %282%29.jpg" />
-    <Content Include="Images\slide-3.png" />
-    <Content Include="Images\slide-31.JPG" />
-    <Content Include="Images\slide-91.png" />
-    <Content Include="Images\slide33.png" />
     <Content Include="RechargeDataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>RechargeDataModel.edmx</DependentUpon>
@@ -397,19 +360,6 @@
     </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Images\accent.png" />
-    <Content Include="Images\bullet.png" />
-    <Content Include="Images\heroAccent.png" />
-    <Content Include="Images\orderedList0.png" />
-    <Content Include="Images\orderedList1.png" />
-    <Content Include="Images\orderedList2.png" />
-    <Content Include="Images\orderedList3.png" />
-    <Content Include="Images\orderedList4.png" />
-    <Content Include="Images\orderedList5.png" />
-    <Content Include="Images\orderedList6.png" />
-    <Content Include="Images\orderedList7.png" />
-    <Content Include="Images\orderedList8.png" />
-    <Content Include="Images\orderedList9.png" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
@@ -477,6 +427,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
