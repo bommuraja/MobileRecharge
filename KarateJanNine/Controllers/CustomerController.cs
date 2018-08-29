@@ -73,8 +73,6 @@ namespace KarateJanNine.Controllers
                 }
                 // 3. CommissionTranaction table entry
                 CommissionTransaction objCommissionTransaction = new CommissionTransaction();
-
-
                 objCommissionTransaction.CreatedBy = customer.CreatedBy;
                 objCommissionTransaction.CreatedDate = customer.CreatedDate;
                 objCommissionTransaction.CustomerID = CustomerID;
@@ -104,6 +102,22 @@ namespace KarateJanNine.Controllers
                 objWalletTransaction.WalletTransactionReferenceID = CustomerID.ToString();
                 db.WalletTransactions.Add(objWalletTransaction);
                 db.SaveChanges();
+                // 5. CashTransaction table entry
+                CashTransaction objCashTransaction = new CashTransaction();
+                objCashTransaction.CashBalance = "0";
+                objCashTransaction.CashTransactionAmount = "0";
+                objCashTransaction.CashTransactionDate= customer.CreatedDate;
+                objCashTransaction.CashTransactionDescription = "Primary Entry";
+                objCashTransaction.CashTransactionReferenceDescription = "For customer creation entry";
+                objCashTransaction.CashTransactionReferenceID = CustomerID.ToString();
+                objCashTransaction.CreatedBy= customer.CreatedBy;
+                objCashTransaction.CreatedDate= customer.CreatedDate;
+                objCashTransaction.CustomerID = CustomerID;
+                objCashTransaction.IsCredit = true;
+                db.CashTransactions.Add(objCashTransaction);
+                db.SaveChanges();
+
+
 
                 return RedirectToAction("Index");
             }
@@ -160,6 +174,13 @@ namespace KarateJanNine.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            // 5. Remove fromo cash transaction table
+            var cashTransactions = db.CashTransactions.Where(c => c.CustomerID == id).ToList();
+            foreach (var item in cashTransactions)
+            {
+                db.CashTransactions.Remove(item);
+                db.SaveChanges();
+            }
             // 4. Remove from wallet transaction table
             var walletTransactions = db.WalletTransactions.Where(c => c.CustomerID == id).ToList();
             foreach (var item in walletTransactions)
