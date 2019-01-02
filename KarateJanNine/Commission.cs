@@ -24,5 +24,6 @@ namespace KarateJanNine
         public string LastModifiedBy { get; set; }
     
         public virtual Provider Provider { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

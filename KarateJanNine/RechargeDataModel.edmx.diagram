@@ -10,13 +10,14 @@
         <EntityTypeShape EntityType="rechargeEntiryModel.CommissionTransaction" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="rechargeEntiryModel.Customer" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="rechargeEntiryModel.Provider" Width="1.5" PointX="5.75" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="rechargeEntiryModel.Recharge" Width="1.5" PointX="3" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="rechargeEntiryModel.WalletTransaction" Width="1.5" PointX="3" PointY="14.5" IsExpanded="true" />
         <AssociationConnector Association="rechargeEntiryModel.FK_CashTransaction_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="rechargeEntiryModel.FK_Commission_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="rechargeEntiryModel.FK_CommissionTransaction_CommissionTransaction" ManuallyRouted="false" />
-        <AssociationConnector Association="rechargeEntiryModel.FK_Recharge_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="rechargeEntiryModel.FK_WalletTransaction_Customer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="rechargeEntiryModel.Recharge" Width="1.5" PointX="3" PointY="18.75" />
+        <AssociationConnector Association="rechargeEntiryModel.FK_Commissions_Customers" />
+        <AssociationConnector Association="rechargeEntiryModel.FK_Recharge_Customer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

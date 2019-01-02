@@ -11,15 +11,16 @@ namespace KarateJanNine
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class Customer
     {
         public Customer()
         {
             this.CashTransactions = new HashSet<CashTransaction>();
             this.CommissionTransactions = new HashSet<CommissionTransaction>();
-            this.Recharges = new HashSet<Recharge>();
             this.WalletTransactions = new HashSet<WalletTransaction>();
+            this.Commissions = new HashSet<Commission>();
+            this.Recharges = new HashSet<Recharge>();
         }
     
         public int CustomerID { get; set; }
@@ -36,7 +37,8 @@ namespace KarateJanNine
     
         public virtual ICollection<CashTransaction> CashTransactions { get; set; }
         public virtual ICollection<CommissionTransaction> CommissionTransactions { get; set; }
-        public virtual ICollection<Recharge> Recharges { get; set; }
         public virtual ICollection<WalletTransaction> WalletTransactions { get; set; }
+        public virtual ICollection<Commission> Commissions { get; set; }
+        public virtual ICollection<Recharge> Recharges { get; set; }
     }
 }

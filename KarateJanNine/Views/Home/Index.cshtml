@@ -520,6 +520,7 @@
                         objDatasForRecharge.CreatedBy = $('#userName').val();
                         objDatasForRecharge.LastModifiedDate = GetTodayDateWithTime();
                         objDatasForRecharge.LastModifiedBy = $('#userName').val();
+                        objDatasForRecharge.Profit = (parseFloat(response.data.amount) - parseFloat(response.data.creditUsed)).toString();
 
 
                         $.ajax({
@@ -635,6 +636,7 @@
             this.CreatedBy = '';
             this.LastModifiedDate = '';
             this.LastModifiedBy = '';
+            this.Profit = '';
         }
         function DatasForLogin() {
             this.userName = '';

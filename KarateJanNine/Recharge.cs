@@ -28,6 +28,7 @@ namespace KarateJanNine
         public string CreatedBy { get; set; }
         public string LastModifiedDate { get; set; }
         public string LastModifiedBy { get; set; }
+        public string Profit { get; set; }
     
         public virtual Customer Customer { get; set; }
     }

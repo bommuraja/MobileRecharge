@@ -92,6 +92,7 @@ namespace KarateJanNine.Controllers
             public string CreatedBy { get; set; }
             public string LastModifiedDate { get; set; }
             public string LastModifiedBy { get; set; }
+            public string Profit { get; set; }
 
 
         }
@@ -143,6 +144,7 @@ namespace KarateJanNine.Controllers
                 newRecharge.CreatedBy = objDatasForRecharge.CreatedBy;
                 newRecharge.LastModifiedDate = objDatasForRecharge.LastModifiedDate;
                 newRecharge.LastModifiedBy = objDatasForRecharge.LastModifiedBy;
+                newRecharge.Profit = objDatasForRecharge.Profit;
                 objRechargeEntities.Recharges.Add(newRecharge);
                 objRechargeEntities.SaveChanges();
                 if (objDatasForRecharge.RechargeStatus.ToLower() != "failed")
@@ -165,24 +167,24 @@ namespace KarateJanNine.Controllers
                     objRechargeEntities.SaveChanges();
 
                     // 3. Commission Tranction
-                    var LastCommissionBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
-                    var ThisRechargeCommisionPercentage = objRechargeEntities.Commissions.OrderByDescending(n => n.CommissionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID && m.ProviderID == NetworkID).FirstOrDefault().CommissionPercentage;
-                    var ThisRechargeCommissionAmount = (Convert.ToDecimal(objDatasForRecharge.RechargeAmount) * Convert.ToDecimal(ThisRechargeCommisionPercentage)) / 100;
+                    //var LastCommissionBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                    //var ThisRechargeCommisionPercentage = objRechargeEntities.Commissions.OrderByDescending(n => n.CommissionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID && m.ProviderID == NetworkID).FirstOrDefault().CommissionPercentage;
+                    //var ThisRechargeCommissionAmount = (Convert.ToDecimal(objDatasForRecharge.RechargeAmount) * Convert.ToDecimal(ThisRechargeCommisionPercentage)) / 100;
 
 
-                    CommissionTransaction objCommissionTransaction = new CommissionTransaction();
-                    objCommissionTransaction.CustomerID = objDatasForRecharge.CustomerID;
-                    objCommissionTransaction.IsCredit = true;
-                    objCommissionTransaction.CommissionTransactionDate = objDatasForRecharge.DateAndTime;
-                    objCommissionTransaction.CommissionTransactionReferenceDescription = "WalletTransaction";
-                    objCommissionTransaction.CommissionTransactionID = objWalletTransaction.WalletTransactionID;
-                    objCommissionTransaction.CommissionTransactionAmount = ThisRechargeCommissionAmount.ToString();
-                    objCommissionTransaction.CommissionTransactionDescription = "Credit transaction for mobile recharge commission";
-                    objCommissionTransaction.CommissionBalance = (Convert.ToDecimal(LastCommissionBalanceAmount) + Convert.ToDecimal(ThisRechargeCommissionAmount)).ToString(); ;
-                    objCommissionTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
-                    objCommissionTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
-                    objRechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
-                    objRechargeEntities.SaveChanges();
+                    //CommissionTransaction objCommissionTransaction = new CommissionTransaction();
+                    //objCommissionTransaction.CustomerID = objDatasForRecharge.CustomerID;
+                    //objCommissionTransaction.IsCredit = true;
+                    //objCommissionTransaction.CommissionTransactionDate = objDatasForRecharge.DateAndTime;
+                    //objCommissionTransaction.CommissionTransactionReferenceDescription = "WalletTransaction";
+                    //objCommissionTransaction.CommissionTransactionID = objWalletTransaction.WalletTransactionID;
+                    //objCommissionTransaction.CommissionTransactionAmount = ThisRechargeCommissionAmount.ToString();
+                    //objCommissionTransaction.CommissionTransactionDescription = "Credit transaction for mobile recharge commission";
+                    //objCommissionTransaction.CommissionBalance = (Convert.ToDecimal(LastCommissionBalanceAmount) + Convert.ToDecimal(ThisRechargeCommissionAmount)).ToString(); ;
+                    //objCommissionTransaction.CreatedDate = objDatasForRecharge.DateAndTime;
+                    //objCommissionTransaction.CreatedBy = objDatasForRecharge.CreatedBy;
+                    //objRechargeEntities.CommissionTransactions.Add(objCommissionTransaction);
+                    //objRechargeEntities.SaveChanges();
 
                 }
                 var WalletBalanceAmount = "0.00";
@@ -191,7 +193,7 @@ namespace KarateJanNine.Controllers
                 WalletBalanceAmount = objRechargeEntities.WalletTransactions.OrderByDescending(n => n.WalletTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().WalletBalance;
                 WalletBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(WalletBalanceAmount));
 
-                ProfitBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
+                //ProfitBalanceAmount = objRechargeEntities.CommissionTransactions.OrderByDescending(n => n.CommissionTransactionID).Where(m => m.CustomerID == objDatasForRecharge.CustomerID).FirstOrDefault().CommissionBalance;
                 ProfitBalanceAmount = String.Format("{0:0.00}", Convert.ToDecimal(ProfitBalanceAmount));
 
                 objLoginResponse.CustomerID = objDatasForRecharge.CustomerID.ToString();

@@ -30,7 +30,7 @@ namespace KarateJanNine
         public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Provider> Providers { get; set; }
-        public DbSet<Recharge> Recharges { get; set; }
         public DbSet<WalletTransaction> WalletTransactions { get; set; }
+        public DbSet<Recharge> Recharges { get; set; }
     }
 }

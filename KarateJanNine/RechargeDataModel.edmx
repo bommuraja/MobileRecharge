@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="rechargeEntiryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="rechargeEntiryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CashTransactions">
           <Key>
             <PropertyRef Name="CashTransactionID" />
@@ -95,6 +95,7 @@
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifiedDate" Type="nvarchar" MaxLength="50" />
           <Property Name="LastModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="Profit" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="WalletTransactions">
           <Key>
@@ -133,6 +134,18 @@
             </Principal>
             <Dependent Role="Commissions">
               <PropertyRef Name="ProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commissions_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="Commissions" Type="Self.Commissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Commissions">
+              <PropertyRef Name="CustomerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -188,6 +201,10 @@
             <End Role="Providers" EntitySet="Providers" />
             <End Role="Commissions" EntitySet="Commissions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Commissions_Customers" Association="Self.FK_Commissions_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Commissions" EntitySet="Commissions" />
+          </AssociationSet>
           <AssociationSet Name="FK_CommissionTransaction_CommissionTransaction" Association="Self.FK_CommissionTransaction_CommissionTransaction">
             <End Role="Customers" EntitySet="Customers" />
             <End Role="CommissionTransactions" EntitySet="CommissionTransactions" />
@@ -201,8 +218,7 @@
             <End Role="WalletTransactions" EntitySet="WalletTransactions" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="rechargeEntiryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -236,6 +252,7 @@
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Provider" Relationship="Self.FK_Commission_Customer" FromRole="Commissions" ToRole="Providers" />
+          <NavigationProperty Name="Customer" Relationship="rechargeEntiryModel.FK_Commissions_Customers" FromRole="Commission" ToRole="Customer" />
         </EntityType>
         <EntityType Name="CommissionTransaction">
           <Key>
@@ -271,8 +288,9 @@
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CashTransactions" Relationship="Self.FK_CashTransaction_Customer" FromRole="Customers" ToRole="CashTransactions" />
           <NavigationProperty Name="CommissionTransactions" Relationship="Self.FK_CommissionTransaction_CommissionTransaction" FromRole="Customers" ToRole="CommissionTransactions" />
-          <NavigationProperty Name="Recharges" Relationship="Self.FK_Recharge_Customer" FromRole="Customers" ToRole="Recharges" />
           <NavigationProperty Name="WalletTransactions" Relationship="Self.FK_WalletTransaction_Customer" FromRole="Customers" ToRole="WalletTransactions" />
+          <NavigationProperty Name="Commissions" Relationship="rechargeEntiryModel.FK_Commissions_Customers" FromRole="Customer" ToRole="Commission" />
+          <NavigationProperty Name="Recharges" Relationship="rechargeEntiryModel.FK_Recharge_Customer" FromRole="Customer" ToRole="Recharge" />
         </EntityType>
         <EntityType Name="Provider">
           <Key>
@@ -285,26 +303,6 @@
           <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Commissions" Relationship="Self.FK_Commission_Customer" FromRole="Providers" ToRole="Commissions" />
-        </EntityType>
-        <EntityType Name="Recharge">
-          <Key>
-            <PropertyRef Name="RechargeID" />
-          </Key>
-          <Property Name="RechargeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerID" Type="Int32" Nullable="false" />
-          <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="NetworkName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DateAndTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeStatus" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeStatusDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeReferenceIDFromAPI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RechargeReferenceIDFromNetwork" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_Recharge_Customer" FromRole="Recharges" ToRole="Customers" />
         </EntityType>
         <EntityType Name="WalletTransaction">
           <Key>
@@ -359,18 +357,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Recharge_Customer">
-          <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
-          <End Role="Recharges" Type="Self.Recharge" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customers">
-              <PropertyRef Name="CustomerID" />
-            </Principal>
-            <Dependent Role="Recharges">
-              <PropertyRef Name="CustomerID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_WalletTransaction_Customer">
           <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
           <End Role="WalletTransactions" Type="Self.WalletTransaction" Multiplicity="*" />
@@ -389,7 +375,6 @@
           <EntitySet Name="CommissionTransactions" EntityType="Self.CommissionTransaction" />
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Providers" EntityType="Self.Provider" />
-          <EntitySet Name="Recharges" EntityType="Self.Recharge" />
           <EntitySet Name="WalletTransactions" EntityType="Self.WalletTransaction" />
           <AssociationSet Name="FK_CashTransaction_Customer" Association="Self.FK_CashTransaction_Customer">
             <End Role="Customers" EntitySet="Customers" />
@@ -403,15 +388,65 @@
             <End Role="Customers" EntitySet="Customers" />
             <End Role="CommissionTransactions" EntitySet="CommissionTransactions" />
           </AssociationSet>
-          <AssociationSet Name="FK_Recharge_Customer" Association="Self.FK_Recharge_Customer">
-            <End Role="Customers" EntitySet="Customers" />
-            <End Role="Recharges" EntitySet="Recharges" />
-          </AssociationSet>
           <AssociationSet Name="FK_WalletTransaction_Customer" Association="Self.FK_WalletTransaction_Customer">
             <End Role="Customers" EntitySet="Customers" />
             <End Role="WalletTransactions" EntitySet="WalletTransactions" />
           </AssociationSet>
+          <EntitySet Name="Recharges" EntityType="rechargeEntiryModel.Recharge" />
+          <AssociationSet Name="FK_Commissions_Customers" Association="rechargeEntiryModel.FK_Commissions_Customers">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Commission" EntitySet="Commissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recharge_Customer" Association="rechargeEntiryModel.FK_Recharge_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Recharge" EntitySet="Recharges" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Recharge">
+          <Key>
+            <PropertyRef Name="RechargeID" />
+          </Key>
+          <Property Name="RechargeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NetworkName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateAndTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeStatus" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeStatusDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeReferenceIDFromAPI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RechargeReferenceIDFromNetwork" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Profit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Customer" Relationship="rechargeEntiryModel.FK_Recharge_Customer" FromRole="Recharge" ToRole="Customer" />
+        </EntityType>
+        <Association Name="FK_Commissions_Customers">
+          <End Type="rechargeEntiryModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="rechargeEntiryModel.Commission" Role="Commission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Commission">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recharge_Customer">
+          <End Type="rechargeEntiryModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="rechargeEntiryModel.Recharge" Role="Recharge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Recharge">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -495,26 +530,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Recharges">
-            <EntityTypeMapping TypeName="rechargeEntiryModel.Recharge">
-              <MappingFragment StoreEntitySet="Recharges">
-                <ScalarProperty Name="RechargeID" ColumnName="RechargeID" />
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
-                <ScalarProperty Name="NetworkName" ColumnName="NetworkName" />
-                <ScalarProperty Name="RechargeAmount" ColumnName="RechargeAmount" />
-                <ScalarProperty Name="DateAndTime" ColumnName="DateAndTime" />
-                <ScalarProperty Name="RechargeStatus" ColumnName="RechargeStatus" />
-                <ScalarProperty Name="RechargeStatusDescription" ColumnName="RechargeStatusDescription" />
-                <ScalarProperty Name="RechargeReferenceIDFromAPI" ColumnName="RechargeReferenceIDFromAPI" />
-                <ScalarProperty Name="RechargeReferenceIDFromNetwork" ColumnName="RechargeReferenceIDFromNetwork" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
-                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="WalletTransactions">
             <EntityTypeMapping TypeName="rechargeEntiryModel.WalletTransaction">
               <MappingFragment StoreEntitySet="WalletTransactions">
@@ -529,6 +544,27 @@
                 <ScalarProperty Name="WalletBalance" ColumnName="WalletBalance" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recharges">
+            <EntityTypeMapping TypeName="rechargeEntiryModel.Recharge">
+              <MappingFragment StoreEntitySet="Recharges">
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RechargeReferenceIDFromNetwork" ColumnName="RechargeReferenceIDFromNetwork" />
+                <ScalarProperty Name="RechargeReferenceIDFromAPI" ColumnName="RechargeReferenceIDFromAPI" />
+                <ScalarProperty Name="RechargeStatusDescription" ColumnName="RechargeStatusDescription" />
+                <ScalarProperty Name="RechargeStatus" ColumnName="RechargeStatus" />
+                <ScalarProperty Name="DateAndTime" ColumnName="DateAndTime" />
+                <ScalarProperty Name="RechargeAmount" ColumnName="RechargeAmount" />
+                <ScalarProperty Name="NetworkName" ColumnName="NetworkName" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="RechargeID" ColumnName="RechargeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
