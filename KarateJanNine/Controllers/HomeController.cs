@@ -211,7 +211,7 @@ namespace KarateJanNine.Controllers
                 objLoginResponse.CustomerID = "-99";
                 objLoginResponse.WalletBalance = ex.StackTrace;
                 objLoginResponse.StatusDescription = ex.Message;
-                //objLoginResponse.CustomerID = ex.InnerException;
+                //objLoginResponse.CustomerID = ex.InnerException bhjk;
                 return Json(objLoginResponse, JsonRequestBehavior.AllowGet);
 
             }
