@@ -19,6 +19,7 @@ namespace KarateJanNine.Controllers
     {
         //
         // GET: /Account/Login
+        // This is for test entry
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
